@@ -41,8 +41,6 @@ def delete_document(request, pk):
             except Exception:
                 pass
         document.delete()
-        from .rag import rebuild_vector_store_from_all_docs
-        rebuild_vector_store_from_all_docs()
         return redirect("document-list")
     return render(request, "knowledge_base/confirm_delete.html", {"document": document})
 
