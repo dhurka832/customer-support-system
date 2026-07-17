@@ -3,11 +3,11 @@ from django.http import Http404, JsonResponse
 from django.contrib.auth.decorators import login_required
 import json
 from .models import Conversation, Message, ChatHistory
+from knowledge_base.rag import generate_answer
 
 
 @login_required
 def chatbot(request):
-    from knowledge_base.rag import generate_answer
     conversations = Conversation.objects.filter(user=request.user)
     active_conv = conversations.first()
     if not active_conv:
@@ -62,6 +62,7 @@ def get_conversation(request, conversation_id):
 
 @login_required
 def send_message_ajax(request):
+    from knowledge_base.rag import generate_answer
     if request.method == "POST":
         try:
             data = json.loads(request.body)
