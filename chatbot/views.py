@@ -1,14 +1,13 @@
-from knowledge_base.rag import generate_answer
 from django.shortcuts import render, redirect
 from django.http import Http404, JsonResponse
 from django.contrib.auth.decorators import login_required
 import json
-
 from .models import Conversation, Message, ChatHistory
 
 
 @login_required
 def chatbot(request):
+    from knowledge_base.rag import generate_answer
     conversations = Conversation.objects.filter(user=request.user)
     active_conv = conversations.first()
     if not active_conv:
