@@ -1,0 +1,8 @@
+venv/
+db.sqlite3
+.env
+__pycache__/
+*.pyc
+media/
+index.faiss
+index.pkl

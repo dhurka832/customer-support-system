@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+        <div class="card card-modern p-4">
+            <h3 class="fw-bold mb-1">Update Ticket</h3>
+            <p class="text-muted small mb-4">Edit the details of your support ticket below.</p>
+            
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="id_title" class="form-label small fw-semibold text-muted">Ticket Subject</label>
+                    <input type="text" name="title" value="{{ form.title.value|default:'' }}" maxlength="200" required id="id_title" class="form-control form-control-modern">
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_priority" class="form-label small fw-semibold text-muted">Priority</label>
+                    <select name="priority" id="id_priority" class="form-select form-control-modern" required>
+                        <option value="Low" {% if form.priority.value == 'Low' %}selected{% endif %}>Low</option>
+                        <option value="Medium" {% if form.priority.value == 'Medium' %}selected{% endif %}>Medium</option>
+                        <option value="High" {% if form.priority.value == 'High' %}selected{% endif %}>High</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label for="id_description" class="form-label small fw-semibold text-muted">Detailed Description</label>
+                    <textarea name="description" id="id_description" rows="5" required class="form-control form-control-modern">{{ form.description.value|default:'' }}</textarea>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{% url 'ticket-list' %}" class="btn btn-secondary-modern">
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary-modern px-4">
+                        <i class="bi bi-save"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

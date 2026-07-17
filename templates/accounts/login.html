@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+{% load static %}
+<link href="{% static 'css/auth.css' %}?v=2.1" rel="stylesheet">
+<style>
+  .navbar-modern { display: none !important; }
+  html, body {
+      background: #0f0f1a !important;
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+  }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div class="auth-page-wrapper">
+
+    <div class="auth-branding">
+        <div class="auth-branding-grid"></div>
+        <div class="orb-accent"></div>
+        <div class="auth-branding-content">
+
+            <div class="auth-logo">
+                <div class="auth-logo-icon">
+                    <i class="bi bi-cpu-fill"></i>
+                </div>
+                <span class="auth-logo-text">SupportSphere</span>
+            </div>
+
+            <h2 class="auth-brand-headline">
+                AI-powered<br>support <span class="gradient-word">reimagined</span>
+            </h2>
+
+            <p class="auth-brand-sub">
+                Resolve customer queries instantly with intelligent automation, real-time chat, and a full-featured ticket management system.
+            </p>
+
+            <div class="auth-feature-list">
+                <div class="auth-feature-item">
+                    <div class="auth-feature-dot indigo">
+                        <i class="bi bi-robot"></i>
+                    </div>
+                    <span class="auth-feature-label">RAG-powered AI chatbot with Llama 3</span>
+                </div>
+                <div class="auth-feature-item">
+                    <div class="auth-feature-dot violet">
+                        <i class="bi bi-ticket-perforated"></i>
+                    </div>
+                    <span class="auth-feature-label">Smart ticket management & live status</span>
+                </div>
+                <div class="auth-feature-item">
+                    <div class="auth-feature-dot emerald">
+                        <i class="bi bi-bar-chart-fill"></i>
+                    </div>
+                    <span class="auth-feature-label">Admin analytics & conversation insights</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="auth-form-panel">
+        <div class="auth-form-inner">
+
+            <div class="auth-form-header">
+                <div class="auth-form-badge">
+                    <i class="bi bi-shield-lock-fill"></i> Secure Login
+                </div>
+                <h1 class="auth-form-title">Welcome back</h1>
+                <p class="auth-form-subtitle">Sign in to your SupportSphere account</p>
+            </div>
+
+            <div class="demo-credentials-box">
+                <div class="demo-cred-label">
+                    <i class="bi bi-info-circle-fill"></i> Demo Account
+                </div>
+                <div class="demo-cred-row">
+                    <div class="demo-cred-pill" onclick="fillCredentials('Dhurka', 'Dhurka@345')" title="Click to auto-fill">
+                        <i class="bi bi-person-fill"></i>
+                        <span class="cred-key">User:</span>
+                        <span class="cred-val">Dhurka</span>
+                    </div>
+                    <div class="demo-cred-pill" onclick="fillCredentials('Dhurka', 'Dhurka@345')" title="Click to auto-fill">
+                        <i class="bi bi-key-fill"></i>
+                        <span class="cred-key">Pass:</span>
+                        <span class="cred-val">Dhurka@345</span>
+                    </div>
+                </div>
+                <div style="margin-top: 0.55rem;">
+                    <small style="color: #818cf8; font-size: 0.73rem; font-family: 'Inter', sans-serif;">
+                        <i class="bi bi-cursor-fill me-1"></i>Click either pill to auto-fill credentials
+                    </small>
+                </div>
+            </div>
+
+            <form method="post" id="loginForm">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="auth-error-box">
+                        {% for error in form.non_field_errors %}
+                            <p><i class="bi bi-exclamation-circle"></i> {{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="form-group-modern">
+                    {% if form.username %}
+                        <label for="{{ form.username.id_for_label }}">
+                            <i class="bi bi-person"></i> Username
+                        </label>
+                        {{ form.username }}
+                        {{ form.username.errors }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group-modern">
+                    {% if form.password %}
+                        <label for="{{ form.password.id_for_label }}">
+                            <i class="bi bi-lock"></i> Password
+                        </label>
+                        {{ form.password }}
+                        {{ form.password.errors }}
+                    {% endif %}
+                </div>
+
+                {% for field in form %}
+                    {% if field.name != 'username' and field.name != 'password' %}
+                        <div class="form-group-modern">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                <div class="form-check-modern">
+                    <div>
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Remember me</label>
+                    </div>
+                    <a href="#" class="forgot-password-link">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn-login">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    Sign In
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p class="auth-footer-text">
+                    Don't have an account?
+                    <a href="{% url 'register' %}" class="auth-footer-link">Create one free →</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+function fillCredentials(username, password) {
+    const usernameInput = document.getElementById('id_username');
+    const passwordInput = document.getElementById('id_password');
+    if (usernameInput) {
+        usernameInput.value = username;
+        usernameInput.focus();
+        usernameInput.blur();
+    }
+    if (passwordInput) {
+        passwordInput.value = password;
+        passwordInput.focus();
+        passwordInput.blur();
+    }
+
+    document.querySelectorAll('.demo-cred-pill').forEach(p => {
+        p.style.background = '#f0f0ff';
+        p.style.borderColor = '#6366f1';
+        setTimeout(() => {
+            p.style.background = '';
+            p.style.borderColor = '';
+        }, 600);
+    });
+}
+</script>
+{% endblock content %}

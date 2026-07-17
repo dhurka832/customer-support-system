@@ -1,0 +1,113 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Conversations Directory | AI Support{% endblock %}
+
+{% block content %}
+<div class="container py-4 px-4">
+    <div class="row align-items-center mb-4 g-3">
+        <div class="col-12 col-md-6">
+            <h1 class="h3 mb-0 text-dark">Conversations Log</h1>
+            <p class="text-muted mb-0">Monitor and filter system-wide conversations.</p>
+        </div>
+        <div class="col-12 col-md-6">
+            <form method="GET" action="" class="d-flex justify-content-md-end">
+                {% if date_filter %}<input type="hidden" name="date_filter" value="{{ date_filter }}">{% endif %}
+                <div class="input-group" style="max-width: 360px;">
+                    <input type="text" name="q" class="form-control" placeholder="Search customer, email or query..." value="{{ search_query }}">
+                    <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
+                    {% if search_query %}
+                    <a href="?date_filter={{ date_filter }}" class="btn btn-outline-secondary">Clear</a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body py-3 d-flex flex-wrap align-items-center justify-content-between g-2">
+            <div class="btn-group mb-2 mb-md-0" role="group" aria-label="Date filter selection">
+                <a href="?date_filter=today{% if search_query %}&q={{ search_query }}{% endif %}" 
+                   class="btn btn-outline-primary {% if date_filter == 'today' %}active{% endif %}">
+                    Today
+                </a>
+                
+                <a href="?date_filter=7days{% if search_query %}&q={{ search_query }}{% endif %}" 
+                   class="btn btn-outline-primary {% if date_filter == '7days' %}active{% endif %}">
+                    Last 7 Days
+                </a>
+                
+                <a href="?date_filter=30days{% if search_query %}&q={{ search_query }}{% endif %}" 
+                   class="btn btn-outline-primary {% if date_filter == '30days' %}active{% endif %}">
+                    Last 30 Days
+                </a>
+                
+                <a href="?date_filter=all{% if search_query %}&q={{ search_query }}{% endif %}" 
+                   class="btn btn-outline-primary {% if date_filter == 'all' or not date_filter %}active{% endif %}">
+                    All Time
+                </a>
+            </div>
+            
+            <div class="text-muted small">
+                Total matching: <strong>{{ page_obj.paginator.count }}</strong> conversation(s)
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        {% for conv in page_obj %}
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                        <div>
+                            <div class="d-flex align-items-center mb-1">
+                                <span class="badge bg-primary bg-opacity-10 text-primary me-2">Thread</span>
+                                <h3 class="h6 mb-0 font-weight-bold">
+                                    <a href="{% url 'admin_customer_detail' conv.user.id %}#collapse-{{ conv.id }}" class="text-decoration-none text-dark hover-primary fw-bold">
+                                        {{ conv.title }}
+                                    </a>
+                                </h3>
+                            </div>
+                            <small class="text-muted">
+                                By <strong>{% if conv.user.get_full_name %}{{ conv.user.get_full_name }}{% else %}{{ conv.user.username }}{% endif %}</strong> 
+                                ({{ conv.user.email }}) &bull; Created: {{ conv.created_at|date:"M d, Y H:i" }}
+                            </small>
+                            
+                            <div class="mt-3 bg-light bg-opacity-50 rounded p-3 border-start border-primary border-3" style="font-size: 0.9rem;">
+                                <small class="text-uppercase text-muted fw-bold d-block mb-2" style="font-size: 0.7rem; letter-spacing: 0.05rem;">Dialogue Preview</small>
+                                {% for msg in conv.messages.all|slice:":2" %}
+                                <div class="mb-2">
+                                    <div class="text-dark small"><strong>Q:</strong> {{ msg.question|truncatewords:20 }}</div>
+                                    <div class="text-muted small ps-3"><strong>A:</strong> {{ msg.ai_answer|truncatewords:20 }}</div>
+                                </div>
+                                {% empty %}
+                                <span class="text-muted small">No message content matches yet.</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <a href="{% url 'admin_customer_detail' conv.user.id %}#collapse-{{ conv.id }}" class="btn btn-sm btn-outline-secondary">
+                            View Conversation
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="card border-0 shadow-sm text-center py-5">
+                <div class="card-body">
+                    <i class="bi bi-calendar-x text-muted opacity-50 mb-3 fs-1 d-block"></i>
+                    <h4 class="h5 text-dark">No conversations found</h4>
+                    <p class="text-muted mb-0">No entries match the chosen date filter and keyword search.</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="mt-4">
+        {% include "components/pagination.html" with page_obj=page_obj %}
+    </div>
+</div>
+{% endblock %}

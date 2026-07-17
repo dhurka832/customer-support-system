@@ -1,0 +1,99 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Conversations for {{ customer.username }} | AI Support{% endblock %}
+
+{% block content %}
+<div class="container py-4 px-4">
+    <div class="mb-3">
+        <a href="{% url 'admin_customers' %}" class="btn btn-link text-decoration-none p-0 d-flex align-items-center">
+            <i class="bi bi-arrow-left me-1"></i> Back to Customers Directory
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body py-4">
+            <div class="d-flex align-items-center">
+                <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; font-weight: 600; font-size: 1.2rem;">
+                    {{ customer.username|slice:":2"|upper }}
+                </div>
+                <div>
+                    <h2 class="h4 mb-1 text-dark">
+                        {% if customer.get_full_name %}
+                            {{ customer.get_full_name }}
+                        {% else %}
+                            {{ customer.username }}
+                        {% endif %}
+                    </h2>
+                    <p class="text-muted mb-0">
+                        <strong>Email:</strong> {{ customer.email }} &bull; 
+                        <strong>Joined:</strong> {{ customer.date_joined|date:"M d, Y" }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="h5 text-dark mb-0">Conversation History</h3>
+        <span class="badge bg-secondary">{{ page_obj.paginator.count }} Total Thread(s)</span>
+    </div>
+
+    {% if page_obj %}
+    <div class="accordion shadow-sm" id="conversationsAccordion">
+        {% for conv in page_obj %}
+        <div class="accordion-item border-0 border-bottom">
+            <h2 class="accordion-header" id="heading-{{ conv.id }}">
+                <button class="accordion-button collapsed py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ conv.id }}" aria-expanded="false" aria-controls="collapse-{{ conv.id }}">
+                    <div class="d-flex justify-content-between align-items-center w-100 me-3">
+                        <span class="font-weight-bold text-dark">{{ conv.title }}</span>
+                        <small class="text-muted">{{ conv.created_at|date:"M d, Y H:i" }}</small>
+                    </div>
+                </button>
+            </h2>
+            <div id="collapse-{{ conv.id }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ conv.id }}" data-bs-parent="#conversationsAccordion">
+                <div class="accordion-body bg-light bg-opacity-25 px-4 py-4">
+                    {% for message in conv.messages %}
+                    <div class="message-group mb-4">
+                        <div class="d-flex justify-content-end mb-2">
+                            <div class="bg-primary text-white p-3 rounded-3" style="max-width: 80%; border-bottom-right-radius: 0 !important;">
+                                <div class="small fw-bold mb-1">Customer</div>
+                                <div class="message-content text-break">{{ message.question }}</div>
+                                <div class="text-white-50 text-end mt-1" style="font-size: 0.75rem;">{{ message.created_at|date:"H:i" }}</div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-start">
+                            <div class="bg-white border p-3 rounded-3" style="max-width: 80%; border-bottom-left-radius: 0 !important;">
+                                <div class="small text-primary fw-bold mb-1">AI Assistant</div>
+                                <div class="message-content text-break">{{ message.ai_answer }}</div>
+                                <div class="text-muted text-end mt-1" style="font-size: 0.75rem;">{{ message.created_at|date:"H:i" }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-3 text-muted">
+                        No dialogue messages recorded for this conversation.
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="mt-4">
+        {% include "components/pagination.html" with page_obj=page_obj %}
+    </div>
+
+    {% else %}
+    <div class="card border-0 shadow-sm text-center py-5">
+        <div class="card-body">
+            <i class="bi bi-chat-left-dots text-muted opacity-50 mb-3 fs-1 d-block"></i>
+            <h4 class="h5 text-dark">No conversations found</h4>
+            <p class="text-muted">This customer hasn't started any chat support conversations yet.</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

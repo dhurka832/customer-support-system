@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="mb-4">
+    <h2 class="fw-bold mb-1">Chat History</h2>
+    <p class="text-muted small mb-0">Review all your legacy question-and-answer exchanges with the support assistant.</p>
+</div>
+
+<div class="row g-3">
+    {% for chat in chats %}
+        <div class="col-12">
+            <div class="card card-modern p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill"><i class="bi bi-clock me-1"></i>Exchange #{{ forloop.revindex }}</span>
+                    <small class="text-muted">{{ chat.created_at|date:"M d, Y H:i" }}</small>
+                </div>
+                
+                <div class="mb-3">
+                    <strong class="text-dark small d-block mb-1"><i class="bi bi-person-fill text-muted me-1"></i>You asked:</strong>
+                    <div class="p-3 bg-light rounded text-muted small" style="white-space: pre-line;">{{ chat.question }}</div>
+                </div>
+                
+                <div>
+                    <strong class="text-dark small d-block mb-1"><i class="bi bi-cpu-fill text-primary me-1"></i>AI responded:</strong>
+                    <div class="p-3 bg-light rounded text-muted small" style="white-space: pre-line;">{{ chat.answer }}</div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="card card-modern text-center py-5">
+                <div class="card-body">
+                    <i class="bi bi-clock-history text-muted opacity-50 mb-3" style="font-size: 3rem;"></i>
+                    <h4 class="fw-bold mb-2">No history logged</h4>
+                    <p class="text-muted small mb-0">Ask questions in the AI Chat portal to populate this log.</p>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

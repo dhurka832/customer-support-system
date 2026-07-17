@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+{% load static %}
+<link href="{% static 'css/auth.css' %}?v=2.1" rel="stylesheet">
+<style>
+  .navbar-modern { display: none !important; }
+  html, body {
+      background: #0f0f1a !important;
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+  }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div class="auth-page-wrapper register-mode">
+
+    <div class="auth-branding">
+        <div class="auth-branding-grid"></div>
+        <div class="orb-accent"></div>
+        <div class="auth-branding-content">
+
+            <div class="auth-logo">
+                <div class="auth-logo-icon">
+                    <i class="bi bi-cpu-fill"></i>
+                </div>
+                <span class="auth-logo-text">SupportSphere</span>
+            </div>
+
+            <h2 class="auth-brand-headline">
+                Join thousands<br>already <span class="gradient-word">supported</span>
+            </h2>
+
+            <p class="auth-brand-sub">
+                Create your free account and experience the next generation of AI-powered customer support — instant, intelligent, and always on.
+            </p>
+
+            <div class="auth-feature-list">
+                <div class="auth-feature-item">
+                    <div class="auth-feature-dot indigo">
+                        <i class="bi bi-lightning-charge-fill"></i>
+                    </div>
+                    <span class="auth-feature-label">Instant setup — live in under a minute</span>
+                </div>
+                <div class="auth-feature-item">
+                    <div class="auth-feature-dot violet">
+                        <i class="bi bi-chat-dots-fill"></i>
+                    </div>
+                    <span class="auth-feature-label">Full chat history & conversation threads</span>
+                </div>
+                <div class="auth-feature-item">
+                    <div class="auth-feature-dot emerald">
+                        <i class="bi bi-lock-fill"></i>
+                    </div>
+                    <span class="auth-feature-label">Secure — no credit card required</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="auth-form-panel">
+        <div class="auth-form-inner">
+
+            <div class="auth-form-header">
+                <div class="auth-form-badge register">
+                    <i class="bi bi-person-plus-fill"></i> New Account
+                </div>
+                <h1 class="auth-form-title">Create account</h1>
+                <p class="auth-form-subtitle">Join SupportSphere and get started today</p>
+            </div>
+
+            <form method="post" id="registerForm">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="auth-error-box">
+                        {% for error in form.non_field_errors %}
+                            <p><i class="bi bi-exclamation-circle"></i> {{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% if form.first_name or form.last_name %}
+                <div class="form-row">
+                    {% if form.first_name %}
+                        <div class="form-group-modern">
+                            <label for="{{ form.first_name.id_for_label }}">
+                                <i class="bi bi-person"></i> First Name
+                            </label>
+                            {{ form.first_name }}
+                            {{ form.first_name.errors }}
+                        </div>
+                    {% endif %}
+                    {% if form.last_name %}
+                        <div class="form-group-modern">
+                            <label for="{{ form.last_name.id_for_label }}">
+                                <i class="bi bi-person"></i> Last Name
+                            </label>
+                            {{ form.last_name }}
+                            {{ form.last_name.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                {% if form.username %}
+                    <div class="form-group-modern">
+                        <label for="{{ form.username.id_for_label }}">
+                            <i class="bi bi-at"></i> Username
+                        </label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                            {{ form.username.errors }}
+                        {% elif form.username.help_text %}
+                            <div class="field-help">
+                                <i class="bi bi-info-circle"></i>
+                                <span>{{ form.username.help_text|safe }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                {% if form.email %}
+                    <div class="form-group-modern">
+                        <label for="{{ form.email.id_for_label }}">
+                            <i class="bi bi-envelope"></i> Email Address
+                        </label>
+                        {{ form.email }}
+                        {{ form.email.errors }}
+                    </div>
+                {% endif %}
+
+                {% if form.password1 %}
+                    <div class="form-group-modern">
+                        <label for="{{ form.password1.id_for_label }}">
+                            <i class="bi bi-lock"></i> Password
+                        </label>
+                        {{ form.password1 }}
+                        {% if form.password1.errors %}
+                            {{ form.password1.errors }}
+                        {% elif form.password1.help_text %}
+                            <div class="field-help">
+                                <i class="bi bi-lightbulb"></i>
+                                <span>{{ form.password1.help_text|safe }}</span>
+                            </div> 
+                        {% endif %}
+                    </div>
+                {% elif form.password %}
+                    <div class="form-group-modern">
+                        <label for="{{ form.password.id_for_label }}">
+                            <i class="bi bi-lock"></i> Password
+                        </label>
+                        {{ form.password }}
+                        {{ form.password.errors }}
+                    </div>
+                {% endif %}
+
+                {% if form.password2 %}
+                    <div class="form-group-modern">
+                        <label for="{{ form.password2.id_for_label }}">
+                            <i class="bi bi-lock-check"></i> Confirm Password
+                        </label>
+                        {{ form.password2 }}
+                        {{ form.password2.errors }}
+                    </div>
+                {% endif %}
+
+                {% for field in form %}
+                    {% if field.name not in "first_name,last_name,username,email,password,password1,password2" %}
+                        <div class="form-group-modern">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                <button type="submit" class="btn-register">
+                    <i class="bi bi-person-plus-fill"></i>
+                    Create Account
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p class="auth-footer-text">
+                    Already have an account?
+                    <a href="{% url 'login' %}" class="auth-footer-link">Sign in →</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,1 @@
+web: gunicorn customer_support_system.wsgi:application

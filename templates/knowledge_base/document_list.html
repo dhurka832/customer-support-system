@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">Knowledge Base</h2>
+        <p class="text-muted small mb-0">Manage the reference documents loaded into the AI chatbot's vector store index.</p>
+    </div>
+    {% if request.user.is_staff %}
+        <a href="{% url 'upload-document' %}" class="btn btn-primary-modern px-3 py-2">
+            <i class="bi bi-cloud-arrow-up-fill me-1"></i> Upload PDF
+        </a>
+    {% endif %}
+</div>
+
+<div class="row g-4">
+    {% for doc in documents %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card card-modern h-100 p-3">
+                <div class="d-flex align-items-start gap-3">
+                    <div class="p-3 bg-danger bg-opacity-10 text-danger rounded-3" style="font-size: 1.5rem;">
+                        <i class="bi bi-file-earmark-pdf-fill"></i>
+                    </div>
+                    <div class="flex-grow-1 min-width-0">
+                        <h5 class="fw-bold mb-1 text-truncate" title="{{ doc.title }}">{{ doc.title }}</h5>
+                        <p class="text-muted small mb-2">Uploaded: {{ doc.uploaded_at|date:"M d, Y" }}</p>
+                        
+                        <div class="d-flex align-items-center gap-2">
+                            <a href="{{ doc.file.url }}" class="btn btn-sm btn-secondary-modern px-2 py-1 text-decoration-none">
+                                <i class="bi bi-download me-1"></i> Download
+                            </a>
+                            {% if request.user.is_staff %}
+                                <a href="{% url 'delete-document' doc.id %}" class="btn btn-sm btn-outline-danger px-2 py-1 text-decoration-none">
+                                    <i class="bi bi-trash me-1"></i> Delete
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="card card-modern text-center py-5">
+                <div class="card-body">
+                    <i class="bi bi-journal-x text-muted opacity-50 mb-3" style="font-size: 3rem;"></i>
+                    <h4 class="fw-bold mb-2">No documents found</h4>
+                    <p class="text-muted small mb-0">The knowledge base is currently empty. Upload PDFs to feed the AI chatbot.</p>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

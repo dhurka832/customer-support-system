@@ -1,0 +1,215 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Support Tickets | AI Support{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4 px-4">
+
+    <div class="row align-items-center mb-4 g-3">
+        <div class="col-12 col-md-6">
+            <h1 class="h3 mb-1 text-dark fw-bold">Support Tickets</h1>
+            <p class="text-muted mb-0">All tickets submitted by customers across the system.</p>
+        </div>
+        <div class="col-12 col-md-6">
+            <form method="GET" action="" class="d-flex justify-content-md-end">
+                {% if status_filter and status_filter != 'all' %}<input type="hidden" name="status" value="{{ status_filter }}">{% endif %}
+                {% if priority_filter and priority_filter != 'all' %}<input type="hidden" name="priority" value="{{ priority_filter }}">{% endif %}
+                <div class="input-group" style="max-width: 380px;">
+                    <input type="text" name="q" class="form-control" placeholder="Search title, customer, email..." value="{{ search_query }}">
+                    <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
+                    {% if search_query %}
+                    <a href="?status={{ status_filter }}&priority={{ priority_filter }}" class="btn btn-outline-secondary">Clear</a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-sm-3">
+            <div class="card border-0 shadow-sm text-center py-3">
+                <div class="card-body p-2">
+                    <div class="fs-3 fw-bold text-dark">{{ total_count }}</div>
+                    <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.7rem; letter-spacing: 0.05rem;">Total</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-sm-3">
+            <div class="card border-0 shadow-sm text-center py-3 border-start border-danger border-3">
+                <div class="card-body p-2">
+                    <div class="fs-3 fw-bold text-danger">{{ open_count }}</div>
+                    <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.7rem; letter-spacing: 0.05rem;">Open</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-sm-3">
+            <div class="card border-0 shadow-sm text-center py-3 border-start border-warning border-3">
+                <div class="card-body p-2">
+                    <div class="fs-3 fw-bold text-warning">{{ in_progress_count }}</div>
+                    <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.7rem; letter-spacing: 0.05rem;">In Progress</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-sm-3">
+            <div class="card border-0 shadow-sm text-center py-3 border-start border-success border-3">
+                <div class="card-body p-2">
+                    <div class="fs-3 fw-bold text-success">{{ closed_count }}</div>
+                    <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.7rem; letter-spacing: 0.05rem;">Closed</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body py-3 d-flex flex-wrap align-items-center gap-3">
+            <span class="text-muted small fw-semibold me-1">Filter by:</span>
+            <div class="btn-group btn-group-sm" role="group">
+                <a href="?status=all&priority={{ priority_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                   class="btn btn-outline-secondary {% if status_filter == 'all' or not status_filter %}active{% endif %}">All Status</a>
+                <a href="?status=open&priority={{ priority_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                   class="btn btn-outline-danger {% if status_filter == 'open' %}active{% endif %}">Open</a>
+                <a href="?status=in_progress&priority={{ priority_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                   class="btn btn-outline-warning {% if status_filter == 'in_progress' %}active{% endif %}">In Progress</a>
+                <a href="?status=closed&priority={{ priority_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                   class="btn btn-outline-success {% if status_filter == 'closed' %}active{% endif %}">Closed</a>
+            </div>
+            <div class="vr d-none d-sm-block"></div>
+            <div class="btn-group btn-group-sm" role="group">
+                <a href="?priority=all&status={{ status_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                   class="btn btn-outline-secondary {% if priority_filter == 'all' or not priority_filter %}active{% endif %}">All Priority</a>
+                <a href="?priority=high&status={{ status_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                   class="btn btn-outline-danger {% if priority_filter == 'high' %}active{% endif %}">High</a>
+                <a href="?priority=medium&status={{ status_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                   class="btn btn-outline-warning {% if priority_filter == 'medium' %}active{% endif %}">Medium</a>
+                <a href="?priority=low&status={{ status_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                   class="btn btn-outline-secondary {% if priority_filter == 'low' %}active{% endif %}">Low</a>
+            </div>
+            <div class="ms-auto text-muted small">
+                Showing <strong>{{ page_obj.paginator.count }}</strong> ticket(s)
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col" class="ps-4">Customer</th>
+                            <th scope="col">Title</th>
+                            <th scope="col" class="text-center">Priority</th>
+                            <th scope="col" class="text-center">Status</th>
+                            <th scope="col">Submitted</th>
+                            <th scope="col" class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ticket in page_obj %}
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center me-2 flex-shrink-0"
+                                         style="width: 36px; height: 36px; font-size: 0.8rem; font-weight: 600;">
+                                        {{ ticket.created_by.username|slice:":2"|upper }}
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold text-dark" style="font-size: 0.9rem;">
+                                            {% if ticket.created_by.get_full_name %}{{ ticket.created_by.get_full_name }}{% else %}{{ ticket.created_by.username }}{% endif %}
+                                        </div>
+                                        <small class="text-muted">{{ ticket.created_by.email }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="fw-medium text-dark">{{ ticket.title }}</span></td>
+                            <td class="text-center">
+                                {% if ticket.priority == 'High' %}
+                                    <span class="badge bg-danger bg-opacity-10 text-danger border border-danger px-2 py-1">High</span>
+                                {% elif ticket.priority == 'Medium' %}
+                                    <span class="badge bg-warning bg-opacity-10 text-warning border border-warning px-2 py-1">Medium</span>
+                                {% else %}
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary px-2 py-1">Low</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                <select class="form-select form-select-sm status-selector border-0 rounded bg-light" 
+                                         data-ticket-id="{{ ticket.id }}"
+                                         data-update-url="{% url 'admin_ticket_update_status' %}"
+                                         style="width: 130px; font-weight: 600; cursor: pointer;">
+                                     <option value="Open" {% if ticket.status == 'Open' %}selected{% endif %} class="text-danger">Open</option>
+                                     <option value="In Progress" {% if ticket.status == 'In Progress' %}selected{% endif %} class="text-warning">In Progress</option>
+                                     <option value="Closed" {% if ticket.status == 'Closed' %}selected{% endif %} class="text-success">Closed</option>
+                                 </select>
+                            </td>
+                            <td class="text-muted" style="font-size: 0.875rem; white-space: nowrap;">
+                                {{ ticket.created_at|date:"M d, Y" }}<br>
+                                <small>{{ ticket.created_at|date:"H:i" }}</small>
+                            </td>
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-outline-primary px-3 rounded-2" type="button" data-bs-toggle="collapse" data-bs-target="#ticket-details-{{ ticket.id }}" aria-expanded="false" aria-controls="ticket-details-{{ ticket.id }}">
+                                    <i class="bi bi-chat-left-text me-1"></i> Details & Reply
+                                </button>
+                            </td>
+                        </tr>
+                        
+                        <tr id="ticket-details-{{ ticket.id }}" class="collapse bg-light bg-opacity-25">
+                            <td colspan="6" class="p-4">
+                                <div class="card card-body border-0 shadow-sm p-4 rounded-3 bg-white">
+                                    <h6 class="fw-bold mb-2 text-dark">Ticket Description:</h6>
+                                    <p class="text-muted" style="white-space: pre-line;">{{ ticket.description }}</p>
+                                    
+                                    <hr class="my-4">
+                                    <h6 class="fw-bold mb-3"><i class="bi bi-reply-all-fill text-primary me-2"></i>Replies History</h6>
+                                    <div class="reply-thread mb-3">
+                                        {% for reply in ticket.replies.all %}
+                                            <div class="p-3 mb-2 rounded bg-light border-start border-primary border-3">
+                                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                                    <strong class="text-dark small"><i class="bi bi-person-badge-fill text-muted me-1"></i>{{ reply.replied_by.username }} (Staff)</strong>
+                                                    <small class="text-muted" style="font-size: 0.75rem;">{{ reply.created_at|date:"M d, Y H:i" }}</small>
+                                                </div>
+                                                <p class="mb-0 text-muted small" style="white-space: pre-line;">{{ reply.body }}</p>
+                                            </div>
+                                        {% empty %}
+                                            <div class="text-muted small italic p-2 bg-light rounded text-center">No replies posted yet. Use the form below to send one.</div>
+                                        {% endfor %}
+                                    </div>
+                                    
+                                    <form method="POST" action="{% url 'admin_ticket_reply' %}" class="mt-4">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                                        <div class="mb-3">
+                                            <label class="form-label small fw-semibold text-muted">Post a Reply</label>
+                                            <textarea class="form-control" name="body" rows="3" required placeholder="Type your reply to customer..."></textarea>
+                                        </div>
+                                        <div class="text-end">
+                                            <button type="submit" class="btn btn-sm btn-primary-modern px-4"><i class="bi bi-send-fill me-1"></i>Send Reply</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                <i class="bi bi-ticket-detailed fs-1 opacity-50 d-block mb-3"></i>
+                                <div class="fw-semibold">No tickets found</div>
+                                <small>No tickets match the current search or filter criteria.</small>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-white border-0 py-3">
+            {% include "components/pagination.html" with page_obj=page_obj %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/tickets.js' %}"></script>
+{% endblock %}

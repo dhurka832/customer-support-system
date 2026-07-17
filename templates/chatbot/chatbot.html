@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block extra_css %}
+{% load static %}
+<link href="{% static 'css/chatbot.css' %}?v=1.0.3" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="chat-layout" id="chatLayoutContainer" data-active-conv-id="{{ active_conv.id }}">
+    <div class="chat-sidebar">
+        <div class="sidebar-header-pane d-flex align-items-center justify-content-between">
+            <h5 class="fw-bold mb-0">Chats</h5>
+            <a href="{% url 'new_conversation' %}" class="btn btn-sm btn-primary-modern rounded-circle" style="width: 32px; height: 32px; padding: 0;" title="New Chat">
+                <i class="bi bi-plus"></i>
+            </a>
+        </div>
+        <div class="conversation-list" id="convList">
+            {% for conv in conversations %}
+                <div class="conversation-item {% if conv.id == active_conv.id %}active{% endif %}" 
+                     data-id="{{ conv.id }}" 
+                     onclick="loadConversation('{{ conv.id }}')">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <span class="text-truncate fw-semibold" id="title-{{ conv.id }}" style="font-size: 0.9rem; max-width: 80%;">{{ conv.title }}</span>
+                        <i class="bi bi-chevron-right small text-muted"></i>
+                    </div>
+                    <small class="text-muted" style="font-size: 0.75rem;">{{ conv.updated_at|date:"M d, Y" }}</small>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="chat-main">
+        <div class="chat-header-pane">
+            <div>
+                <h5 class="fw-bold mb-0 text-dark" id="currentChatTitle">{{ active_conv.title }}</h5>
+                <span class="text-muted small"><i class="bi bi-circle-fill text-success me-1" style="font-size: 0.6rem;"></i>Support Agent Online</span>
+            </div>
+        </div>
+
+        <div class="chat-messages" id="chatMessageLog">
+        </div>
+
+        <div class="px-4 py-2 bg-light" id="typingIndicator" style="display: none;">
+            <div class="typing-indicator d-inline-flex">
+                <span class="bg-primary"></span>
+                <span class="bg-primary"></span>
+                <span class="bg-primary"></span>
+            </div>
+        </div>
+
+        <div class="chat-input-pane">
+            <form id="chatForm" class="d-flex gap-2">
+                {% csrf_token %}
+                <input type="text" id="userInput" class="form-control form-control-modern flex-grow-1" placeholder="Type your support question..." autocomplete="off" required>
+                <button type="submit" class="btn btn-primary-modern px-4">
+                    <span>Send</span> <i class="bi bi-send-fill ms-1"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/chatbot.js' %}?v=1.0.3"></script>
+{% endblock %}
