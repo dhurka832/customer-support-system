@@ -62,7 +62,6 @@ def get_conversation(request, conversation_id):
 
 @login_required
 def send_message_ajax(request):
-    from knowledge_base.rag import generate_answer
     if request.method == "POST":
         try:
             data = json.loads(request.body)

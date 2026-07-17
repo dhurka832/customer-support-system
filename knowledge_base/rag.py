@@ -18,8 +18,8 @@ _embedding = None
 def get_embedding():
     global _embedding
     if _embedding is None:
-        embedding = GoogleGenerativeAIEmbeddings(
-            model="models/text-embedding-004"
+        _embedding = GoogleGenerativeAIEmbeddings(
+            model="models/gemini-embedding-001"
         )
     return _embedding
 
