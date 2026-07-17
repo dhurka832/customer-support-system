@@ -1,6 +1,6 @@
 # SupportSphere — AI-Powered Customer Support System
 
-SupportSphere is a premium, full-stack **Customer Support Platform** built on **Django 5.2**. It combines a RAG-powered AI chatbot (Llama 3 + FAISS), smart ticket management, a knowledge base document system, and a rich administrative dashboard — all backed by a **dual-database architecture**: SQLite for user accounts and MongoDB for chat logs.
+SupportSphere is a premium, full-stack **Customer Support Platform** built on **Django 5.2**. It combines a RAG-powered AI chatbot (Llama 3 + FAISS), smart ticket management, a knowledge base document system, and a rich administrative dashboard — all backed by a single **PostgreSQL** database.
 
 ---
 
@@ -8,7 +8,7 @@ SupportSphere is a premium, full-stack **Customer Support Platform** built on **
 
 ### 1. 🤖 AI Chatbot (`chatbot`)
 - **Real-time AI Chat**: Customers ask questions and receive instant replies grounded in the company's internal knowledge base documents.
-- **Smart Conversation Sidebar**: Full chat session history is stored in MongoDB and displayed in a collapsible sidebar. Users can switch between threads or start fresh sessions.
+- **Smart Conversation Sidebar**: Full chat session history is stored in PostgreSQL and displayed in a collapsible sidebar. Users can switch between threads or start fresh sessions.
 - **RAG-Powered Responses**: Integrates FAISS vector store + Llama 3 (via Groq API) to retrieve semantically relevant document chunks before generating answers.
 
 ### 2. 🎫 Ticket Management (`support`)
@@ -21,12 +21,12 @@ SupportSphere is a premium, full-stack **Customer Support Platform** built on **
 - **Automatic Vector Indexing**: Uploaded documents are parsed and indexed into the FAISS vector database to enrich the AI chatbot's context.
 
 ### 4. 📊 Admin Dashboard (`accounts`)
-- **Metrics Overview**: Total users, total conversations (MongoDB), total messages, active users today, and per-user averages.
-- **30-Day Activity Charts**: Conversation and message timelines powered by Chart.js, aggregated via MongoDB pipelines.
-- **Customer Directory**: Browse, search, and sort customers — annotated with live conversation & message counts from MongoDB.
-- **Conversation Logs**: Browse, search, and filter all chat threads from MongoDB with date range filters.
+- **Metrics Overview**: Total users, total conversations, total messages, active users today, and per-user averages — all computed with Django ORM aggregations against PostgreSQL.
+- **30-Day Activity Charts**: Conversation and message timelines powered by Chart.js, aggregated via Django's `TruncDate`/`Count` queryset annotations.
+- **Customer Directory**: Browse, search, and sort customers — annotated with live conversation & message counts via ORM `Count` annotations.
+- **Conversation Logs**: Browse, search, and filter all chat threads with date range filters.
 - **CSV Export**: Download all message logs as a CSV file.
-- **Global Search**: Search users (SQLite), conversations & messages (MongoDB), and tickets simultaneously.
+- **Global Search**: Search users, conversations & messages, and tickets simultaneously — all backed by PostgreSQL.
 
 ### 5. 🔐 Premium Auth Pages
 - **Split-panel Login & Register screens**: Dark animated branding panel on the left, clean white form on the right.
@@ -40,31 +40,36 @@ SupportSphere is a premium, full-stack **Customer Support Platform** built on **
 | Layer | Technology |
 |---|---|
 | **Backend** | Django 5.2 (Python 3.10+) |
-| **Primary Database** | SQLite — User accounts, tickets, knowledge base |
-| **Chat Log Database** | MongoDB — Conversations, messages, chat history |
+| **Database** | PostgreSQL — user accounts, tickets, knowledge base, conversations, messages, chat history |
 | **AI / NLP** | FAISS Vector Store + Llama 3 via Groq API |
 | **Embeddings** | HuggingFace `sentence-transformers` |
 | **Frontend** | HTML5, Vanilla CSS3, Vanilla JavaScript |
 | **CSS Framework** | Bootstrap 5 (grid, icons, base utilities) |
 | **Visualization** | Chart.js (admin analytics graphs) |
 | **Static Serving** | WhiteNoise (production-ready) |
-| **MongoDB Driver** | PyMongo 4.x |
+| **DB Driver** | psycopg2-binary |
+| **DB URL Parsing** | dj-database-url |
 
 ---
 
-## 🗄️ Dual-Database Design
+## 🗄️ Database Design
+
+All application data — including chat data that used to live in a separate MongoDB instance — now lives in a single PostgreSQL database, managed entirely through Django's ORM and migrations.
 
 ```
-SQLite (db.sqlite3)                  MongoDB (customer_support)
-─────────────────────────────────    ──────────────────────────────────
-  auth_user (User accounts)            conversations  (chat sessions)
-  support_ticket (Tickets)             messages       (Q&A exchanges)
-  ticketreply                          chat_history   (legacy log)
-  knowledge_base_document
+PostgreSQL (customer_support)
+──────────────────────────────────────
+  auth_user                  (User accounts)
+  support_ticket              (Tickets)
+  support_ticketreply         (Ticket replies)
+  knowledge_base_document      (Uploaded docs)
+  chatbot_conversation         (Chat sessions)
+  chatbot_message              (Q&A exchanges within a conversation)
+  chatbot_chathistory          (Flat legacy Q&A log)
   django_session / admin tables
 ```
 
-The MongoDB integration layer lives in [`chatbot/mongodb.py`](chatbot/mongodb.py), exposing clean helper functions used by all views.
+The chatbot's data model lives in [`chatbot/models.py`](chatbot/models.py) (`Conversation`, `Message`, `ChatHistory`), and is queried directly via the Django ORM from `chatbot/views.py` and `accounts/views.py` — no separate database client or connector layer is needed.
 
 ---
 
@@ -74,9 +79,9 @@ The MongoDB integration layer lives in [`chatbot/mongodb.py`](chatbot/mongodb.py
 customer_support_system/
 │
 ├── accounts/                   # User auth, registration & admin dashboard views
-├── chatbot/                    # AI chatbot views, MongoDB helpers, RAG integration
-│   ├── mongodb.py              # ★ MongoDB connector & all CRUD helpers
-│   └── views.py                # Chatbot views (uses mongodb.py exclusively)
+├── chatbot/                    # AI chatbot views, models, RAG integration
+│   ├── models.py                # Conversation / Message / ChatHistory models
+│   └── views.py                 # Chatbot views (uses the Django ORM exclusively)
 ├── customer_support_system/    # Django project settings, root URLs
 ├── knowledge_base/             # Document upload, text extraction, FAISS indexing
 │   └── vectorstore/            # FAISS index files (index.faiss, index.pkl)
@@ -103,7 +108,6 @@ customer_support_system/
 │
 ├── media/                      # Uploaded documents
 ├── manage.py
-├── db.sqlite3                  # SQLite database (users, tickets, etc.)
 └── requirements.txt
 ```
 
@@ -113,7 +117,7 @@ customer_support_system/
 
 ### 1. Prerequisites
 - Python 3.10+
-- **MongoDB** running locally on `mongodb://localhost:27017/` (or set `MONGODB_URI` in `.env`)
+- **PostgreSQL** running locally (or accessible via a connection string)
 - Virtual Environment utility (`venv`)
 
 ### 2. Clone & Setup Environment
@@ -130,34 +134,33 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 3. Configure Environment Variables
-Create a `.env` file in the project root:
-```env
-GROQ_API_KEY=your_groq_api_key_here
-MONGODB_URI=mongodb://localhost:27017/        # Optional: defaults to local
-MONGODB_DB_NAME=customer_support             # Optional: defaults to this name
+### 3. Create the PostgreSQL Database
+```bash
+createdb customer_support
+# or, from the psql shell:
+# CREATE DATABASE customer_support;
 ```
 
-### 4. Run SQLite Migrations
-Initialize the relational database schema (users, tickets, etc.):
+### 4. Configure Environment Variables
+Create a `.env` file in the project root:
+```env
+SECRET_KEY=your_secret_key_here
+GROQ_API_KEY=your_groq_api_key_here
+DATABASE_URL=postgres://USER:PASSWORD@localhost:5432/customer_support
+DEBUG=True
+```
+`DATABASE_URL` is parsed by `dj-database-url` in `settings.py`. If it's not set, the project falls back to a local `db.sqlite3` file — useful for a quick first run, but PostgreSQL is the intended database for this project.
+
+### 5. Run Migrations
+Creates all tables — users, tickets, knowledge base documents, conversations, messages, chat history:
 ```bash
 python manage.py migrate
 ```
 
-### 5. Create an Admin Superuser
+### 6. Create an Admin Superuser
 Required to access the Admin Dashboard and Knowledge Base upload portal:
 ```bash
 python manage.py createsuperuser
-```
-
-### 6. Start MongoDB
-Make sure your local MongoDB instance is running:
-```bash
-# Windows (if installed as a service):
-net start MongoDB
-
-# Or start manually:
-mongod --dbpath "C:\data\db"
 ```
 
 ### 7. Run the Development Server
@@ -185,16 +188,46 @@ Expected: `System check identified no issues (0 silenced).`
 
 ---
 
+## 🩺 Troubleshooting
+
+### Server Error (500) with no details
+By default `DEBUG=False` hides the real traceback. Set `DEBUG=True` in `.env`, restart the server, and reproduce the error to see the actual exception. Once fixed, set it back to `False` before deploying.
+
+The most common causes right after switching to PostgreSQL:
+
+1. **PostgreSQL isn't running or isn't reachable.**
+   ```bash
+   psql "postgres://USER:PASSWORD@localhost:5432/customer_support" -c "\dt"
+   ```
+   If this fails to connect, every page will 500.
+
+2. **`psycopg2-binary` / `dj-database-url` aren't installed** (added when the project moved off MongoDB):
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Migrations haven't been applied to the new database.**
+   ```bash
+   python manage.py migrate
+   ```
+   If `chatbot_conversation`, `chatbot_message`, or `chatbot_chathistory` don't exist yet, any chatbot or dashboard page will 500 with `relation "..." does not exist`.
+
+4. **`DATABASE_URL` is missing or wrong** in `.env` — check the user, password, host, port, and database name.
+
+If the traceback points somewhere else entirely, open an issue (or ask for help) with the full stack trace — the exact line tells you which of the above (if any) is the actual cause.
+
+---
+
 ## 📦 Key Dependencies
 
 | Package | Purpose |
 |---|---|
 | `django==5.2` | Web framework |
-| `pymongo` | MongoDB driver |
+| `psycopg2-binary` | PostgreSQL driver |
+| `dj-database-url` | Database URL configuration helper |
 | `langchain` + `langchain-groq` | RAG chain & Groq LLM integration |
 | `faiss-cpu` | Vector similarity search |
 | `sentence-transformers` | Document embedding model |
-| `pypdf` + `python-docx` | Document text extraction |
+| `pypdf` | Document text extraction |
 | `whitenoise` | Static file serving |
-| `dj-database-url` | Database URL configuration helper |
 | `gunicorn` | Production WSGI server |
