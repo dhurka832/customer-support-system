@@ -52,6 +52,24 @@ SupportSphere is a premium, full-stack **Customer Support Platform** built on **
 
 ---
 
+# 📸 Screenshots
+
+<p align="center">
+  <img src="screenshots/admin-dashboard.jpg" alt="Admin Dashboard View" width="400"/>
+  <img src="screenshots/ai_chat.jpg" alt="AI Chat View" width="400"/>
+  <img src="screenshots/chat_logs.jpg" alt="Chat Logs View" width="400"/>
+  <img src="screenshots/customers.jpg" alt="Customers View" width="400"/>
+  <img src="screenshots/knowledge_base.jpg" alt="Knowledge Base View" width="400"/>
+  <img src="screenshots/tickets.jpg" alt="Tickets View" width="400"/>
+  <img src="screenshots/new-ticket.jpg" alt="New Tickets View" width="400"/>
+  <img src="screenshots/user_tickets.jpg" alt="User Tickets iew" width="400"/>
+  <img src="screenshots/user_profile.jpg" alt="User Profile View" width="400"/>
+  <img src="screenshots/register.jpg" alt="Register View" width="400"/>
+  <img src="screenshots/login.jpg" alt="Login View" width="400"/>
+</p>
+
+---
+
 ## 🗄️ Database Design
 
 All application data — including chat data that used to live in a separate MongoDB instance — now lives in a single PostgreSQL database, managed entirely through Django's ORM and migrations.
