@@ -7,6 +7,7 @@ from .models import Conversation, Message, ChatHistory
 
 @login_required
 def chatbot(request):
+    from knowledge_base.rag import generate_answer
     conversations = Conversation.objects.filter(user=request.user)
     active_conv = conversations.first()
     if not active_conv:
