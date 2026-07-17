@@ -32,11 +32,13 @@
                                 <i class="bi bi-chat-dots-fill"></i> AI Chat
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{% url 'ticket-list' %}" class="nav-link-custom {% if request.resolver_match.url_name == 'ticket-list' or request.resolver_match.url_name == 'create-ticket' or request.resolver_match.url_name == 'update-ticket' %}active{% endif %}">
-                                <i class="bi bi-ticket-detailed-fill"></i> My Tickets
-                            </a>
-                        </li>
+                        {% if request.user.is_authenticated and not request.user.is_superuser %}
+                            <li class="nav-item">
+                                <a href="{% url 'ticket-list' %}" class="nav-link-custom {% if request.resolver_match.url_name == 'ticket-list' or request.resolver_match.url_name == 'create-ticket' or request.resolver_match.url_name == 'update-ticket' %}active{% endif %}">
+                                    <i class="bi bi-ticket-detailed-fill"></i> My Tickets
+                                </a>
+                            </li>
+                        {% endif %}
                         <li class="nav-item">
                             <a href="{% url 'customer_profile' %}" class="nav-link-custom {% if request.resolver_match.url_name == 'customer_profile' %}active{% endif %}">
                                 <i class="bi bi-person-fill"></i> Profile
