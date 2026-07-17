@@ -87,12 +87,13 @@ WSGI_APPLICATION = 'customer_support_system.wsgi.application'
 # Falls back to local sqlite only if DATABASE_URL isn't set (e.g. first run
 # before Postgres is configured).
 
-if os.getenv("RENDER"):
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if DATABASE_URL:
     DATABASES = {
-        "default": dj_database_url.config(
-            default=os.environ.get("DATABASE_URL"),
+        "default": dj_database_url.parse(
+            DATABASE_URL,
             conn_max_age=600,
-            ssl_require=True,
         )
     }
 else:
@@ -102,8 +103,7 @@ else:
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-
-
+    
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
