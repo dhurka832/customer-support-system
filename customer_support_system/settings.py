@@ -17,6 +17,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+DATABASE_URL = os.getenv("DATABASE_URL")
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -86,25 +88,13 @@ WSGI_APPLICATION = 'customer_support_system.wsgi.application'
 #   DATABASE_URL=postgres://USER:PASSWORD@HOST:5432/DBNAME
 # Falls back to local sqlite only if DATABASE_URL isn't set (e.g. first run
 # before Postgres is configured).
-
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-if DATABASE_URL:
-    DATABASES = {
-        "default": dj_database_url.parse(
-            DATABASE_URL,
-            conn_max_age=600,
-            ssl_require=True,
-        )
-    }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
-    
+DATABASES = {
+    "default": dj_database_url.parse(
+        DATABASE_URL,
+        conn_max_age=600,
+        ssl_require=True,
+    )
+}
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
