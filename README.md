@@ -63,7 +63,7 @@ SupportSphere is a premium, full-stack **Customer Support Platform** built on **
   <img src="screenshots/tickets.jpg" alt="Tickets View" width="400"/>
   <img src="screenshots/new-ticket.jpg" alt="New Tickets View" width="400"/>
   <img src="screenshots/user_tickets.jpg" alt="User Tickets iew" width="400"/>
-  <img src="screenshots/user_profile.jpg" alt="User Profile View" width="400"/>
+  <img src="screenshots/user-profile.jpg" alt="User Profile View" width="400"/>
   <img src="screenshots/register.jpg" alt="Register View" width="400"/>
   <img src="screenshots/login.jpg" alt="Login View" width="400"/>
 </p>
