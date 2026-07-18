@@ -42,7 +42,7 @@ SupportSphere is a premium, full-stack **Customer Support Platform** built on **
 | **Backend** | Django 5.2 (Python 3.10+) |
 | **Database** | PostgreSQL — user accounts, tickets, knowledge base, conversations, messages, chat history |
 | **AI / NLP** | FAISS Vector Store + Llama 3 via Groq API |
-| **Embeddings** | HuggingFace `sentence-transformers` |
+| **Embeddings** | Google AI Embeddings (`models/gemini-embedding-001`) |
 | **Frontend** | HTML5, Vanilla CSS3, Vanilla JavaScript |
 | **CSS Framework** | Bootstrap 5 (grid, icons, base utilities) |
 | **Visualization** | Chart.js (admin analytics graphs) |
@@ -71,7 +71,6 @@ SupportSphere is a premium, full-stack **Customer Support Platform** built on **
 
 ## 🗄️ Database Design
 
-All application data — including chat data that used to live in a separate MongoDB instance — now lives in a single PostgreSQL database, managed entirely through Django's ORM and migrations.
 
 ```
 PostgreSQL (customer_support)
@@ -85,8 +84,6 @@ PostgreSQL (customer_support)
   chatbot_chathistory          (Flat legacy Q&A log)
   django_session / admin tables
 ```
-
-The chatbot's data model lives in [`chatbot/models.py`](chatbot/models.py) (`Conversation`, `Message`, `ChatHistory`), and is queried directly via the Django ORM from `chatbot/views.py` and `accounts/views.py` — no separate database client or connector layer is needed.
 
 ---
 
@@ -163,24 +160,31 @@ Create a `.env` file in the project root:
 ```env
 SECRET_KEY=your_secret_key_here
 GROQ_API_KEY=your_groq_api_key_here
+GOOGLE_API_KEY=your_google_api_key_here
 DATABASE_URL=postgres://USER:PASSWORD@localhost:5432/customer_support
 DEBUG=True
 ```
-`DATABASE_URL` is parsed by `dj-database-url` in `settings.py`. If it's not set, the project falls back to a local `db.sqlite3` file — useful for a quick first run, but PostgreSQL is the intended database for this project.
+`DATABASE_URL` is parsed by `dj-database-url` in `settings.py`. If it's not set, the project falls back to a local `db.sqlite3` file — useful for a quick first run, but PostgreSQL is the intended database for this project. If using Google AI Embeddings, make sure to supply your `GOOGLE_API_KEY`.
 
-### 5. Run Migrations
+### 5. Rebuild the Vector Store
+Before running the chatbot for the first time or after updating documents, rebuild the FAISS vector database to generate embeddings using Google AI:
+```bash
+python manage.py rebuild_vectorstore
+```
+
+### 6. Run Migrations
 Creates all tables — users, tickets, knowledge base documents, conversations, messages, chat history:
 ```bash
 python manage.py migrate
 ```
 
-### 6. Create an Admin Superuser
+### 7. Create an Admin Superuser
 Required to access the Admin Dashboard and Knowledge Base upload portal:
 ```bash
 python manage.py createsuperuser
 ```
 
-### 7. Run the Development Server
+### 8. Run the Development Server
 ```bash
 python manage.py runserver
 ```
@@ -244,7 +248,7 @@ If the traceback points somewhere else entirely, open an issue (or ask for help)
 | `dj-database-url` | Database URL configuration helper |
 | `langchain` + `langchain-groq` | RAG chain & Groq LLM integration |
 | `faiss-cpu` | Vector similarity search |
-| `sentence-transformers` | Document embedding model |
+| `langchain-google-genai` | Google AI Embeddings integration |
 | `pypdf` | Document text extraction |
 | `whitenoise` | Static file serving |
 | `gunicorn` | Production WSGI server |
