@@ -4,23 +4,23 @@ SupportSphere is a premium, full-stack **Customer Support Platform** built on **
 
 ---
 
-## 🚀 Key Features
+## Key Features
 
-### 1. 🤖 AI Chatbot (`chatbot`)
+### 1. AI Chatbot (`chatbot`)
 - **Real-time AI Chat**: Customers ask questions and receive instant replies grounded in the company's internal knowledge base documents.
 - **Smart Conversation Sidebar**: Full chat session history is stored in PostgreSQL and displayed in a collapsible sidebar. Users can switch between threads or start fresh sessions.
 - **RAG-Powered Responses**: Integrates FAISS vector store + Llama 3 (via Groq API) to retrieve semantically relevant document chunks before generating answers.
 
-### 2. 🎫 Ticket Management (`support`)
+### 2. Ticket Management (`support`)
 - **My Tickets Portal**: Customers can submit support tickets with priority levels (Low, Medium, High) and detailed descriptions.
 - **Interactive Replies**: Staff post direct replies to ticket threads.
 - **Inline AJAX Status Updates**: Admins update ticket statuses (Open → In Progress → Closed) without full page reloads.
 
-### 3. 📚 Knowledge Base (`knowledge_base`)
+### 3. Knowledge Base (`knowledge_base`)
 - **Document Upload**: Staff upload company handbooks, policy PDFs, or guides.
 - **Automatic Vector Indexing**: Uploaded documents are parsed and indexed into the FAISS vector database to enrich the AI chatbot's context.
 
-### 4. 📊 Admin Dashboard (`accounts`)
+### 4. Admin Dashboard (`accounts`)
 - **Metrics Overview**: Total users, total conversations, total messages, active users today, and per-user averages — all computed with Django ORM aggregations against PostgreSQL.
 - **30-Day Activity Charts**: Conversation and message timelines powered by Chart.js, aggregated via Django's `TruncDate`/`Count` queryset annotations.
 - **Customer Directory**: Browse, search, and sort customers — annotated with live conversation & message counts via ORM `Count` annotations.
@@ -28,14 +28,14 @@ SupportSphere is a premium, full-stack **Customer Support Platform** built on **
 - **CSV Export**: Download all message logs as a CSV file.
 - **Global Search**: Search users, conversations & messages, and tickets simultaneously — all backed by PostgreSQL.
 
-### 5. 🔐 Premium Auth Pages
+### 5. Premium Auth Pages
 - **Split-panel Login & Register screens**: Dark animated branding panel on the left, clean white form on the right.
 - **Demo Credentials Box**: Login page shows clickable demo pills (`Dhurka / Dhurka@345`) that auto-fill the form.
 - Fully responsive — branding panel collapses on mobile.
 
 ---
 
-## 🛠️ Architecture & Tech Stack
+##  Architecture & Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -52,24 +52,24 @@ SupportSphere is a premium, full-stack **Customer Support Platform** built on **
 
 ---
 
-# 📸 Screenshots
+#  Screenshots
 
 <p align="center">
-  <img src="screenshots/admin-dashboard.jpg" alt="Admin Dashboard View" width="400"/>
-  <img src="screenshots/ai_chat.jpg" alt="AI Chat View" width="400"/>
-  <img src="screenshots/chat_logs.jpg" alt="Chat Logs View" width="400"/>
-  <img src="screenshots/customers.jpg" alt="Customers View" width="400"/>
-  <img src="screenshots/knowledge_base.jpg" alt="Knowledge Base View" width="400"/>
-  <img src="screenshots/tickets.jpg" alt="Tickets View" width="400"/>
-  <img src="screenshots/user_tickets.jpg" alt="User Tickets iew" width="400"/>
-  <img src="screenshots/user-profile.jpg" alt="User Profile View" width="400"/>
-  <img src="screenshots/register.jpg" alt="Register View" width="400"/>
-  <img src="screenshots/login.jpg" alt="Login View" width="400"/>
+  <img src="screenshots/admin-dashboard.jpg" alt="Admin Dashboard View"  height="400" width="400"/>
+  <img src="screenshots/ai_chat.jpg" alt="AI Chat View"  height="400" width="400"/> 
+  <img src="screenshots/chat_logs.jpg" alt="Chat Logs View"  height="400" width="400"/>
+  <img src="screenshots/customers.jpg" alt="Customers View"  height="400" width="400"/>
+  <img src="screenshots/knowledge_base.jpg" alt="Knowledge Base View"  height="400" width="400"/>
+  <img src="screenshots/tickets.jpg" alt="Tickets View"  height="400" width="400"/>
+  <img src="screenshots/user_tickets.jpg" alt="User Tickets iew"  height="400" width="400"/>
+  <img src="screenshots/user-profile.jpg" alt="User Profile View" width="400" height="400"/>
+  <img src="screenshots/login.jpg" alt="Login View"  height="400" width="400" /> 
+
 </p>
 
 ---
 
-## 🗄️ Database Design
+## Database Design
 
 
 ```
@@ -87,7 +87,7 @@ PostgreSQL (customer_support)
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 customer_support_system/
@@ -127,7 +127,7 @@ customer_support_system/
 
 ---
 
-## ⚙️ Setup & Installation
+## Setup & Installation
 
 ### 1. Prerequisites
 - Python 3.10+
@@ -194,7 +194,7 @@ Visit `http://127.0.0.1:8000/` in your browser.
 
 ---
 
-## 🧪 Verification & Static Files
+## Verification & Static Files
 
 After modifying any file in `static/`, recompile with:
 ```bash
@@ -209,7 +209,7 @@ Expected: `System check identified no issues (0 silenced).`
 
 ---
 
-## 🩺 Troubleshooting
+## Troubleshooting
 
 ### Server Error (500) with no details
 By default `DEBUG=False` hides the real traceback. Set `DEBUG=True` in `.env`, restart the server, and reproduce the error to see the actual exception. Once fixed, set it back to `False` before deploying.
@@ -239,7 +239,7 @@ If the traceback points somewhere else entirely, open an issue (or ask for help)
 
 ---
 
-## 📦 Key Dependencies
+## Key Dependencies
 
 | Package | Purpose |
 |---|---|
