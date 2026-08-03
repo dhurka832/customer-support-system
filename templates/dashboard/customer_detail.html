@@ -53,7 +53,7 @@
             </h2>
             <div id="collapse-{{ conv.id }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ conv.id }}" data-bs-parent="#conversationsAccordion">
                 <div class="accordion-body bg-light bg-opacity-25 px-4 py-4">
-                    {% for message in conv.messages %}
+                    {% for message in conv.message_list %}
                     <div class="message-group mb-4">
                         <div class="d-flex justify-content-end mb-2">
                             <div class="bg-primary text-white p-3 rounded-3" style="max-width: 80%; border-bottom-right-radius: 0 !important;">

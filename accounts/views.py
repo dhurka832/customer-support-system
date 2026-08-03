@@ -174,8 +174,8 @@ def admin_customer_detail(request, user_id):
         .prefetch_related('messages')
     )
     for conv in conversation_list:
-        # Template iterates `conv.messages` directly (no `.all`), so materialize it here.
-        conv.messages = list(conv.messages.all())
+        # Template iterates `conv.message_list` directly (no `.all`), so materialize it here.
+        conv.message_list = list(conv.messages.all())
 
     paginator = Paginator(conversation_list, 5)
     page_number = request.GET.get('page')

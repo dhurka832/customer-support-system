@@ -6,3 +6,7 @@ __pycache__/
 media/
 index.faiss
 index.pkl
+graphify-out
+runtime.txt
+server.log
+server.err.log
