@@ -107,6 +107,22 @@
     position: relative;
 }
 
+.msg-sender {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 4px;
+}
+
+.msg-wrapper.user .msg-sender {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.msg-wrapper.ai .msg-sender {
+    color: var(--primary-color);
+}
+
 .msg-wrapper.user .msg-bubble {
     background: var(--primary-gradient);
     color: #ffffff;

@@ -11,7 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
         conversations = JSON.parse(chartCanvas.dataset.conversations || '[]');
         messages = JSON.parse(chartCanvas.dataset.messages || '[]');
     } catch (e) {
-        console.error("Failed to parse chart metrics from data attributes", e);
+        dates = [];
+        conversations = [];
+        messages = [];
     }
 
     const ctx = chartCanvas.getContext('2d');

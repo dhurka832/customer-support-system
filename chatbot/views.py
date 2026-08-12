@@ -13,7 +13,7 @@ def chatbot(request):
     if not active_conv:
         active_conv = Conversation.objects.create(
             user=request.user,
-            title="Welcome Chat",
+            title=request.user.username,
         )
         conversations = Conversation.objects.filter(user=request.user)
 
@@ -31,7 +31,7 @@ def chatbot(request):
 def new_conversation(request):
     Conversation.objects.create(
         user=request.user,
-        title="New Chat Session",
+        title=request.user.username,
     )
     return redirect("chatbot")
 
@@ -86,10 +86,7 @@ def send_message_ajax(request):
                 ai_answer=answer,
             )
 
-            title = conv.title
-            if title in ("New Chat Session", "Welcome Chat"):
-                title = question[:45] + '...' if len(question) > 45 else question
-
+            title = request.user.username
             conv.title = title
             conv.save(update_fields=["title", "updated_at"])
 

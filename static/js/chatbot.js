@@ -1,10 +1,12 @@
 let activeConversationId = null;
+let chatUserName = "";
 
 document.addEventListener("DOMContentLoaded", () => {
     const chatContainer = document.getElementById("chatLayoutContainer");
     if (!chatContainer) return;
 
     activeConversationId = chatContainer.dataset.activeConvId;
+    chatUserName = chatContainer.dataset.userName || "";
 
     const chatForm = document.getElementById("chatForm");
     if (chatForm) {
@@ -48,8 +50,8 @@ function loadConversation(convId) {
             if (!data.success) return;
 
             const titleHeader = document.getElementById("currentChatTitle");
-            if (titleHeader) {
-                titleHeader.textContent = data.title;
+            if (titleHeader && chatUserName) {
+                titleHeader.textContent = chatUserName;
             }
 
             messageLog.innerHTML = "";
@@ -99,6 +101,7 @@ function appendMessageBubble(question, answer, timeStr) {
     userMsg.className = "msg-wrapper user";
     userMsg.innerHTML = `
         <div class="msg-bubble">
+            <div class="msg-sender">${escapeHtml(chatUserName)}</div>
             <div>${escapeHtml(question)}</div>
             <small class="msg-meta">${timeStr}</small>
         </div>
@@ -109,6 +112,7 @@ function appendMessageBubble(question, answer, timeStr) {
     aiMsg.className = "msg-wrapper ai";
     aiMsg.innerHTML = `
         <div class="msg-bubble">
+            <div class="msg-sender">SupportSphere AI</div>
             <div>${answer}</div>
             <small class="msg-meta">${timeStr}</small>
         </div>
@@ -180,16 +184,6 @@ function sendMessage(e) {
 
             if (data.success) {
                 appendMessageBubble(data.question, data.ai_answer, data.created_at);
-
-                const titleSpan = document.getElementById(`title-${activeConversationId}`);
-                if (titleSpan) {
-                    titleSpan.textContent = data.conv_title;
-                }
-
-                const titleHeader = document.getElementById("currentChatTitle");
-                if (titleHeader) {
-                    titleHeader.textContent = data.conv_title;
-                }
 
                 scrollToBottom();
             } else {

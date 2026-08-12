@@ -43,8 +43,7 @@ function handleStatusChange(event) {
             alert(`Error: ${data.error}`);
         }
     })
-    .catch(error => {
-        console.error("Failed to update status", error);
+    .catch(() => {
         alert("Failed to update status. Please try again.");
     });
 }

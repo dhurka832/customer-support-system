@@ -8,7 +8,7 @@ SupportSphere is a premium, full-stack **Customer Support Platform** built on **
 
 ### 1. 🤖 AI Chatbot (`chatbot`)
 - **Real-time AI Chat**: Customers ask questions and receive instant replies grounded in the company's internal knowledge base documents.
-- **Smart Conversation Sidebar**: Full chat session history is stored in PostgreSQL and displayed in a collapsible sidebar. Users can switch between threads or start fresh sessions.
+- **Streamlined Chat Interface**: Full-width chat view displaying the user's **bold username** at the top above "Support Agent Online".
 - **RAG-Powered Responses**: Integrates FAISS vector store + Llama 3 (via Groq API) to retrieve semantically relevant document chunks before generating answers.
 
 ### 2. 🎫 Ticket Management (`support`)
@@ -25,7 +25,6 @@ SupportSphere is a premium, full-stack **Customer Support Platform** built on **
 - **30-Day Activity Charts**: Conversation and message timelines powered by Chart.js, aggregated via Django's `TruncDate`/`Count` queryset annotations.
 - **Customer Directory**: Browse, search, and sort customers — annotated with live conversation & message counts via ORM `Count` annotations.
 - **Conversation Logs**: Browse, search, and filter all chat threads with date range filters.
-- **CSV Export**: Download all message logs as a CSV file.
 - **Global Search**: Search users, conversations & messages, and tickets simultaneously — all backed by PostgreSQL.
 
 ### 5. 🔐 Premium Auth Pages
@@ -56,7 +55,7 @@ SupportSphere is a premium, full-stack **Customer Support Platform** built on **
 
 <p align="center">
   <img src="screenshots/admin-dashboard.jpg" alt="Admin Dashboard View" width="400"/>
-  <img src="screenshots/ai_chat.jpg" alt="AI Chat View" width="400"/>
+  <img src="screenshots/rag_chatbot.jpg" alt="AI Chat View" width="400"/>
   <img src="screenshots/chat_logs.jpg" alt="Chat Logs View" width="400"/>
   <img src="screenshots/customers.jpg" alt="Customers View" width="400"/>
   <img src="screenshots/knowledge_base.jpg" alt="Knowledge Base View" width="400"/>

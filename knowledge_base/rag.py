@@ -5,11 +5,8 @@ from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_groq import ChatGroq
 from dotenv import load_dotenv
 import os
-import logging
 import shutil
 from django.conf import settings
-
-logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -59,8 +56,7 @@ def create_vector_store(chunks):
                 allow_dangerous_deserialization=True
             )
             db.add_documents(chunks)
-        except Exception as e:
-            logger.error(f"Error loading existing vectorstore: {e}. Rebuilding vectorstore instead.")
+        except Exception:
             # If load fails due to dimension mismatch, rebuild from scratch including new chunks
             db = FAISS.from_documents(chunks, get_embedding())
         db.save_local(vectorstore_path)
@@ -75,7 +71,6 @@ def create_vector_store(chunks):
 def load_vector_store():
     vectorstore_path = get_vectorstore_path()
     if not os.path.exists(vectorstore_path) or not os.path.exists(os.path.join(vectorstore_path, "index.faiss")):
-        logger.warning(f"Vectorstore not found at: {vectorstore_path}")
         return None
     try:
         db = FAISS.load_local(
@@ -84,12 +79,10 @@ def load_vector_store():
             allow_dangerous_deserialization=True
         )
         return db
-    except Exception as e:
-        logger.error(f"Failed to load FAISS vectorstore: {e}. Attempting auto-rebuild from documents.")
+    except Exception:
         try:
             return rebuild_vector_store_from_all_docs()
-        except Exception as rebuild_err:
-            logger.error(f"Auto-rebuild of vectorstore failed: {rebuild_err}")
+        except Exception:
             return None
 
 def rebuild_vector_store_from_all_docs():
@@ -98,8 +91,8 @@ def rebuild_vector_store_from_all_docs():
     if os.path.exists(vectorstore_path):
         try:
             shutil.rmtree(vectorstore_path)
-        except Exception as e:
-            logger.warning(f"Could not remove old vectorstore directory: {e}")
+        except Exception:
+            pass
             
     all_docs = Document.objects.all()
     all_chunks = []
@@ -109,21 +102,18 @@ def rebuild_vector_store_from_all_docs():
                 docs = load_pdf(doc.file.path)
                 chunks = split_documents(docs)
                 all_chunks.extend(chunks)
-            except Exception as e:
-                logger.error(f"Failed to load/split PDF {doc.file.path}: {e}")
+            except Exception:
+                pass
         else:
-            logger.warning(f"Document file does not exist on disk: {doc.file.path}")
+            pass
                 
     if all_chunks:
         try:
             db = FAISS.from_documents(all_chunks, get_embedding())
             db.save_local(vectorstore_path)
-            logger.info("Successfully rebuilt vectorstore from all documents.")
             return db
-        except Exception as e:
-            logger.error(f"Failed to create FAISS from documents: {e}")
-            raise e
-    logger.warning("No document chunks to index.")
+        except Exception:
+            raise
     return None
 
 
@@ -134,8 +124,7 @@ def search_documents(question):
     try:
         docs = db.similarity_search(question, k=3)
         return docs
-    except Exception as e:
-        logger.error(f"Error during similarity search: {e}")
+    except Exception:
         return []
 
 def generate_answer(question):

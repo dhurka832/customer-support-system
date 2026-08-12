@@ -4,9 +4,6 @@ from .forms import DocumentForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import get_object_or_404
 import os
-import logging
-
-logger = logging.getLogger(__name__)
 
 @staff_member_required
 def upload_document(request):
@@ -23,9 +20,8 @@ def upload_document(request):
                 docs = load_pdf(document.file.path)
                 chunks = split_documents(docs)
                 create_vector_store(chunks)
-                logger.info(f"Successfully processed and indexed document: {document.title}")
-            except Exception as e:
-                logger.error(f"Error processing uploaded document {document.title}: {e}", exc_info=True)
+            except Exception:
+                pass
             return redirect("document-list")
     else:
         form = DocumentForm()
@@ -39,23 +35,20 @@ def document_list(request):
 def delete_document(request, pk):
     document = get_object_or_404(Document, id=pk)
     if request.method == "POST":
-        title = document.title
         if document.file and os.path.exists(document.file.path):
             try:
                 os.remove(document.file.path)
-            except Exception as e:
-                logger.error(f"Error removing document file from disk: {e}")
+            except Exception:
+                pass
         
         document.delete()
-        logger.info(f"Deleted document from database: {title}")
         
         # Rebuild the vectorstore to clean out deleted document chunks
         from .rag import rebuild_vector_store_from_all_docs
         try:
             rebuild_vector_store_from_all_docs()
-            logger.info("Successfully rebuilt vectorstore after document deletion.")
-        except Exception as e:
-            logger.error(f"Failed to rebuild vectorstore after deleting {title}: {e}")
+        except Exception:
+            pass
             
         return redirect("document-list")
     return render(request, "knowledge_base/confirm_delete.html", {"document": document})
