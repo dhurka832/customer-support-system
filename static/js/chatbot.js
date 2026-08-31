@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// Load messages for selected conversation
 function loadConversation(convId) {
     activeConversationId = convId;
 
@@ -60,7 +59,6 @@ function loadConversation(convId) {
         });
 }
 
-// Append user question and AI answer bubbles
 function appendMessageBubble(question, answer, timeStr) {
     const messageLog = document.getElementById("chatMessageLog");
     if (!messageLog) return;
@@ -100,7 +98,6 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// Send user message via AJAX
 function sendMessage(e) {
     e.preventDefault();
 

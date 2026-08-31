@@ -9,29 +9,24 @@ from langchain_groq import ChatGroq
 
 load_dotenv()
 
-# Initialize LLM model
 llm = ChatGroq(
     model="llama-3.3-70b-versatile",
     temperature=0
 )
 
-# Helper function to get Google GenAI Embeddings
 def get_embedding():
     return GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
 
-# Get path to local FAISS vectorstore directory
 def get_vectorstore_path():
     base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(__file__)))
     return os.path.join(base_dir, "knowledge_base", "vectorstore")
 
-# Load and split PDF document into chunks
 def load_and_split_pdf(pdf_path):
     loader = PyPDFLoader(pdf_path)
     documents = loader.load()
     splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100)
     return splitter.split_documents(documents)
 
-# Create or update FAISS vector store with new chunks
 def create_vector_store(chunks):
     vectorstore_path = get_vectorstore_path()
     index_file = os.path.join(vectorstore_path, "index.faiss")
@@ -48,7 +43,6 @@ def create_vector_store(chunks):
     db.save_local(vectorstore_path)
     return db
 
-# Load local FAISS vector store
 def load_vector_store():
     vectorstore_path = get_vectorstore_path()
     index_file = os.path.join(vectorstore_path, "index.faiss")
@@ -61,7 +55,6 @@ def load_vector_store():
     except Exception:
         return rebuild_vector_store_from_all_docs()
 
-# Rebuild entire vector store from database documents
 def rebuild_vector_store_from_all_docs():
     from .models import Document
 
@@ -92,7 +85,6 @@ def rebuild_vector_store_from_all_docs():
 
     return None
 
-# Search vectorstore for relevant documents
 def search_documents(question):
     db = load_vector_store()
     if db is None:
@@ -102,7 +94,6 @@ def search_documents(question):
     except Exception:
         return []
 
-# Generate RAG answer using retrieved contexts
 def generate_answer(question):
     docs = search_documents(question)
 

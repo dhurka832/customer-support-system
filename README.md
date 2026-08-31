@@ -9,13 +9,13 @@ SupportSphere is a full-stack **Customer Support Platform** built with **Django 
 ### 1. AI Chatbot (`chatbot`)
 - **Real-time AI Support**: Customers ask questions and receive instant answers grounded directly in internal knowledge base documents.
 - **RAG Architecture**: Uses FAISS vector storage + Google AI Embeddings (`gemini-embedding-001`) + Llama 3 (via Groq API) to retrieve relevant context before generating answers.
-- **Streamlined JavaScript**: Clean, lightweight client-side logic for real-time AJAX message processing and session loading.
+- **Streamlined JavaScript**: Clean, lightweight client-side logic for real-time AJAX message processing and session loading (`chatbot.js`).
 - **Access Control**: Dedicated to customer accounts (admins focus exclusively on support operations and knowledge management).
 
 ### 2. Ticket Management (`support`)
 - **Customer Ticket Portal**: Submit support tickets with priority levels (Low, Medium, High) and detailed descriptions.
 - **Interactive Replies**: Staff and customers communicate via threaded replies.
-- **Inline Status Updates**: Staff dynamically update ticket statuses (Open → In Progress → Closed) via AJAX.
+- **Inline Status Updates**: Staff dynamically update ticket statuses (Open → In Progress → Closed) via AJAX with real-time feedback (`tickets.js`).
 
 ### 3. Knowledge Base (`knowledge_base`)
 - **Document Upload**: Staff upload policy handbooks or guides (PDF format).
@@ -23,10 +23,10 @@ SupportSphere is a full-stack **Customer Support Platform** built with **Django 
 - **Management Command**: `python manage.py rebuild_vectorstore` command to re-index documents on demand.
 
 ### 4. Admin Dashboard (`accounts`)
-- **System Metrics**: Total registered users, total conversations, total messages, active users today, and per-user averages via Django ORM aggregations.
-- **Customer Directory**: Search, browse, and inspect customer profiles with live conversation counts.
+- **System Metrics & Analytics**: Total registered users, conversations, messages, active users today, and dynamic traffic trends rendered with Chart.js (`dashboard-chart.js`).
+- **Customer Directory**: Search, browse, and inspect customer profiles with live conversation counts and interactive delete confirmation (`customers.js`).
 - **Chat Logs Audit**: Comprehensive log search and date filtering for customer chat sessions.
-- **Global Search**: Unified search across users, conversations, chat messages, and support tickets.
+- **Global Search & Navigation**: Unified search across users, conversations, chat messages, and tickets, plus a responsive toggleable sidebar (`sidebar.js`).
 
 ### 5. Auth & Simple Login Interface
 - **Split-Panel Login & Register**: Clean layout with branding panel and secure login form.
@@ -71,7 +71,9 @@ SupportSphere is a full-stack **Customer Support Platform** built with **Django 
 ```
 customer_support_system/
 │
-├── accounts/                   
+├── accounts/  
+│   ├── forms.py
+│   └── models.py                
 ├── chatbot/                   
 │   ├── models.py                
 │   └── views.py                 
@@ -79,15 +81,21 @@ customer_support_system/
 ├── knowledge_base/             
 │   ├── rag.py                   
 │   └── vectorstore/            
-├── support/                    
-│
+├── support/   
+│   ├── forms.py
+│   ├── models.py
+│   └── views.py         
 ├── static/
-│   ├── css/                    
+│   ├── css/ 
+│   │   ├── auth.css
+│   │   ├── base.css 
+│   │   └── chatbot.css                
 │   └── js/
 │       ├── chatbot.js          
-│       ├── tickets.js          
-│       └── sidebar.js         
-│
+│       ├── customers.js          
+│       ├── dashboard-chart.js          
+│       ├── sidebar.js  
+│       └── tickets.js          
 ├── templates/                  
 ├── manage.py
 └── requirements.txt
