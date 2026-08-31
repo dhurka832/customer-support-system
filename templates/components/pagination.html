@@ -1,5 +1,3 @@
-{% load navigation_tags %}
-
 {% if page_obj.has_other_pages %}
 <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
     <span class="text-muted small">
@@ -12,12 +10,12 @@
             
             {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?{% url_replace 'page' 1 %}" aria-label="First">
+                <a class="page-link" href="?page=1" aria-label="First">
                     <span aria-hidden="true">&laquo;&laquo; First</span>
                 </a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="?{% url_replace 'page' page_obj.previous_page_number %}" aria-label="Previous">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
                     <span aria-hidden="true">&laquo; Prev</span>
                 </a>
             </li>
@@ -33,19 +31,19 @@
                 </li>
                 {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
                 <li class="page-item">
-                    <a class="page-link" href="?{% url_replace 'page' num %}">{{ num }}</a>
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
                 </li>
                 {% endif %}
             {% endfor %}
 
             {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?{% url_replace 'page' page_obj.next_page_number %}" aria-label="Next">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
                     <span aria-hidden="true">Next &raquo;</span>
                 </a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="?{% url_replace 'page' page_obj.paginator.num_pages %}" aria-label="Last">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
                     <span aria-hidden="true">Last &raquo;&raquo;</span>
                 </a>
             </li>

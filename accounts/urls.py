@@ -18,5 +18,4 @@ urlpatterns = [
     path("dashboard/admin/tickets/status/", views.admin_ticket_update_status, name="admin_ticket_update_status"),
     path("dashboard/admin/tickets/reply/", views.admin_ticket_reply, name="admin_ticket_reply"),
     path("dashboard/admin/search/", views.admin_search, name="admin_search"),
-    path("dashboard/admin/export/csv/", views.export_conversations_csv, name="export_conversations_csv"),
 ]

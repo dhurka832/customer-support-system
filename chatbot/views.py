@@ -1,13 +1,15 @@
+import json
 from django.shortcuts import render, redirect
 from django.http import Http404, JsonResponse
 from django.contrib.auth.decorators import login_required
-import json
 from .models import Conversation, Message, ChatHistory
 from knowledge_base.rag import generate_answer
 
-
 @login_required
 def chatbot(request):
+    if request.user.is_staff:
+        return redirect("admin_dashboard")
+
     conversations = Conversation.objects.filter(user=request.user)
     active_conv = conversations.first()
     if not active_conv:
@@ -26,18 +28,22 @@ def chatbot(request):
         }
     )
 
-
 @login_required
 def new_conversation(request):
+    if request.user.is_staff:
+        return redirect("admin_dashboard")
+
     Conversation.objects.create(
         user=request.user,
         title=request.user.username,
     )
     return redirect("chatbot")
 
-
 @login_required
 def get_conversation(request, conversation_id):
+    if request.user.is_staff:
+        return JsonResponse({'success': False, 'error': 'Admin users do not use AI Chat.'}, status=403)
+
     try:
         conv = Conversation.objects.get(id=conversation_id, user=request.user)
     except Conversation.DoesNotExist:
@@ -59,9 +65,11 @@ def get_conversation(request, conversation_id):
         'messages': messages
     })
 
-
 @login_required
 def send_message_ajax(request):
+    if request.user.is_staff:
+        return JsonResponse({'success': False, 'error': 'Admin users do not use AI Chat.'}, status=403)
+
     if request.method == "POST":
         try:
             data = json.loads(request.body)
@@ -103,8 +111,10 @@ def send_message_ajax(request):
 
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
 
-
 @login_required
 def history(request):
+    if request.user.is_staff:
+        return redirect("admin_dashboard")
+
     chats = ChatHistory.objects.filter(user=request.user)
     return render(request, "chatbot/history.html", {"chats": chats})

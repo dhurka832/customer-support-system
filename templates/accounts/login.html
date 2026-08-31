@@ -71,29 +71,6 @@
                 <p class="auth-form-subtitle">Sign in to your SupportSphere account</p>
             </div>
 
-            <div class="demo-credentials-box">
-                <div class="demo-cred-label">
-                    <i class="bi bi-info-circle-fill"></i> Demo Account
-                </div>
-                <div class="demo-cred-row">
-                    <div class="demo-cred-pill" onclick="fillCredentials('Dhurka', 'Dhurka@345')" title="Click to auto-fill">
-                        <i class="bi bi-person-fill"></i>
-                        <span class="cred-key">User:</span>
-                        <span class="cred-val">Dhurka</span>
-                    </div>
-                    <div class="demo-cred-pill" onclick="fillCredentials('Dhurka', 'Dhurka@345')" title="Click to auto-fill">
-                        <i class="bi bi-key-fill"></i>
-                        <span class="cred-key">Pass:</span>
-                        <span class="cred-val">Dhurka@345</span>
-                    </div>
-                </div>
-                <div style="margin-top: 0.55rem;">
-                    <small style="color: #818cf8; font-size: 0.73rem; font-family: 'Inter', sans-serif;">
-                        <i class="bi bi-cursor-fill me-1"></i>Click either pill to auto-fill credentials
-                    </small>
-                </div>
-            </div>
-
             <form method="post" id="loginForm">
                 {% csrf_token %}
 
@@ -156,33 +133,11 @@
                 </p>
             </div>
 
+            <div class="mt-3 text-center text-muted small">
+                Admin Demo - <strong>Dhurka</strong> | <strong>Dhurka@345</strong> <br>
+            </div>
+
         </div>
     </div>
 </div>
-
-<script>
-function fillCredentials(username, password) {
-    const usernameInput = document.getElementById('id_username');
-    const passwordInput = document.getElementById('id_password');
-    if (usernameInput) {
-        usernameInput.value = username;
-        usernameInput.focus();
-        usernameInput.blur();
-    }
-    if (passwordInput) {
-        passwordInput.value = password;
-        passwordInput.focus();
-        passwordInput.blur();
-    }
-
-    document.querySelectorAll('.demo-cred-pill').forEach(p => {
-        p.style.background = '#f0f0ff';
-        p.style.borderColor = '#6366f1';
-        setTimeout(() => {
-            p.style.background = '';
-            p.style.borderColor = '';
-        }, 600);
-    });
-}
-</script>
 {% endblock content %}

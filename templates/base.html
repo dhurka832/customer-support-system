@@ -27,11 +27,13 @@
             <div class="collapse navbar-collapse" id="navbarContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center gap-2">
                     {% if user.is_authenticated %}
+                        {% if not request.user.is_staff %}
                         <li class="nav-item">
                             <a href="{% url 'chatbot' %}" class="nav-link-custom {% if request.resolver_match.url_name == 'chatbot' %}active{% endif %}">
                                 <i class="bi bi-chat-dots-fill"></i> AI Chat
                             </a>
                         </li>
+                        {% endif %}
                         {% if request.user.is_authenticated and not request.user.is_superuser %}
                             <li class="nav-item">
                                 <a href="{% url 'ticket-list' %}" class="nav-link-custom {% if request.resolver_match.url_name == 'ticket-list' or request.resolver_match.url_name == 'create-ticket' or request.resolver_match.url_name == 'update-ticket' %}active{% endif %}">

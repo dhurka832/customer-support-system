@@ -43,7 +43,6 @@ def delete_document(request, pk):
         
         document.delete()
         
-        # Rebuild the vectorstore to clean out deleted document chunks
         from .rag import rebuild_vector_store_from_all_docs
         try:
             rebuild_vector_store_from_all_docs()

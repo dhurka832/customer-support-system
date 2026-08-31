@@ -1,15 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Count, Q
 from django.db.models.functions import TruncDate
 from django.utils import timezone
 from django.http import HttpResponse
 from datetime import timedelta
+from functools import wraps
 import json
-import csv
 from .forms import RegisterForm
 from chatbot.models import Conversation, Message
 from support.models import Ticket
@@ -18,6 +18,14 @@ User = get_user_model()
 
 def is_admin(user):
     return user.is_authenticated and user.is_staff
+
+def admin_required(view_func):
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        if not (request.user.is_authenticated and request.user.is_staff):
+            return redirect("login")
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view
 
 def register_view(request):
     if request.method == "POST":
@@ -54,7 +62,7 @@ def logout_view(request):
     return redirect("login")
 
 @login_required
-@user_passes_test(is_admin, login_url='login')
+@admin_required
 def admin_dashboard(request):
     today = timezone.now().date()
     thirty_days_ago = timezone.now() - timedelta(days=30)
@@ -118,7 +126,7 @@ def admin_dashboard(request):
 
 
 @login_required
-@user_passes_test(is_admin, login_url='login')
+@admin_required
 def admin_customers(request):
     search_query = request.GET.get('search', '').strip()
     sort_by = request.GET.get('sort', 'date_joined')
@@ -165,7 +173,7 @@ def admin_customers(request):
 
 
 @login_required
-@user_passes_test(is_admin, login_url='login')
+@admin_required
 def admin_customer_detail(request, user_id):
     customer = get_object_or_404(User, id=user_id)
     conversation_list = list(
@@ -174,7 +182,6 @@ def admin_customer_detail(request, user_id):
         .prefetch_related('messages')
     )
     for conv in conversation_list:
-        # Template iterates `conv.message_list` directly (no `.all`), so materialize it here.
         conv.message_list = list(conv.messages.all())
 
     paginator = Paginator(conversation_list, 5)
@@ -188,7 +195,7 @@ def admin_customer_detail(request, user_id):
 
 
 @login_required
-@user_passes_test(is_admin, login_url='login')
+@admin_required
 def admin_conversations(request):
     search_query = request.GET.get('q', '').strip()
     date_filter = request.GET.get('date_filter', 'all').lower()
@@ -229,43 +236,10 @@ def admin_conversations(request):
     })
 
 
-@login_required
-@user_passes_test(is_admin, login_url='login')
-def export_conversations_csv(request):
-    response = HttpResponse(
-        content_type='text/csv',
-        headers={'Content-Disposition': 'attachment; filename="support_conversations.csv"'},
-    )
-    writer = csv.writer(response)
-    writer.writerow(['Customer Name', 'Email', 'Question', 'AI Answer', 'Timestamp'])
-
-    message_logs = (
-        Message.objects.select_related('conversation__user')
-        .order_by('-created_at')
-        .iterator()
-    )
-
-    for msg in message_logs:
-        user = msg.conversation.user
-        if user:
-            customer_name = user.get_full_name() or user.username
-            email = user.email
-        else:
-            customer_name = "Unknown"
-            email = ""
-        writer.writerow([
-            customer_name,
-            email,
-            msg.question,
-            msg.ai_answer,
-            msg.created_at.strftime('%Y-%m-%d %H:%M:%S')
-        ])
-
-    return response
 
 
 @login_required
-@user_passes_test(is_admin, login_url='login')
+@admin_required
 def admin_tickets(request):
     search_query = request.GET.get('q', '').strip()
     status_filter = request.GET.get('status', 'all').lower()
@@ -336,7 +310,7 @@ def customer_profile(request):
 
 
 @login_required
-@user_passes_test(is_admin, login_url='login')
+@admin_required
 def admin_delete_customer(request, user_id):
     if request.method == "POST":
         customer = get_object_or_404(User, id=user_id, is_staff=False)
@@ -347,7 +321,7 @@ def admin_delete_customer(request, user_id):
 from django.http import JsonResponse
 
 @login_required
-@user_passes_test(is_admin, login_url='login')
+@admin_required
 def admin_ticket_update_status(request):
     if request.method == "POST":
         try:
@@ -370,7 +344,7 @@ from django.core.mail import send_mail
 from support.models import TicketReply
 
 @login_required
-@user_passes_test(is_admin, login_url='login')
+@admin_required
 def admin_ticket_reply(request):
     if request.method == "POST":
         ticket_id = request.POST.get('ticket_id')
@@ -399,7 +373,7 @@ def admin_ticket_reply(request):
 
 
 @login_required
-@user_passes_test(is_admin, login_url='login')
+@admin_required
 def admin_search(request):
     q = request.GET.get('q', '').strip()
     users = []

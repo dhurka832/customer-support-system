@@ -1,159 +1,129 @@
+import os
+from dotenv import load_dotenv
+from django.conf import settings
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_groq import ChatGroq
-from dotenv import load_dotenv
-import os
-import shutil
-from django.conf import settings
 
 load_dotenv()
 
+# Initialize LLM model
 llm = ChatGroq(
-        model="llama-3.3-70b-versatile",
-        temperature=0
-    )
+    model="llama-3.3-70b-versatile",
+    temperature=0
+)
 
-_embedding = None
-
+# Helper function to get Google GenAI Embeddings
 def get_embedding():
-    global _embedding
-    if _embedding is None:
-        _embedding = GoogleGenerativeAIEmbeddings(
-            model="models/gemini-embedding-001"
-        )
-    return _embedding
+    return GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
 
+# Get path to local FAISS vectorstore directory
 def get_vectorstore_path():
-    try:
-        base_dir = settings.BASE_DIR
-    except Exception:
-        from pathlib import Path
-        base_dir = Path(__file__).resolve().parent.parent
+    base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(__file__)))
     return os.path.join(base_dir, "knowledge_base", "vectorstore")
 
-def load_pdf(pdf_path):
+# Load and split PDF document into chunks
+def load_and_split_pdf(pdf_path):
     loader = PyPDFLoader(pdf_path)
     documents = loader.load()
-    return documents
-
-def split_documents(documents):
-    splitter = RecursiveCharacterTextSplitter(
-        chunk_size=500,
-        chunk_overlap=100
-    )
-
+    splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100)
     return splitter.split_documents(documents)
 
+# Create or update FAISS vector store with new chunks
 def create_vector_store(chunks):
     vectorstore_path = get_vectorstore_path()
-    if os.path.exists(vectorstore_path) and os.path.exists(os.path.join(vectorstore_path, "index.faiss")):
+    index_file = os.path.join(vectorstore_path, "index.faiss")
+
+    if os.path.exists(vectorstore_path) and os.path.exists(index_file):
         try:
-            db = FAISS.load_local(
-                vectorstore_path,
-                get_embedding(),
-                allow_dangerous_deserialization=True
-            )
+            db = FAISS.load_local(vectorstore_path, get_embedding(), allow_dangerous_deserialization=True)
             db.add_documents(chunks)
         except Exception:
-            # If load fails due to dimension mismatch, rebuild from scratch including new chunks
             db = FAISS.from_documents(chunks, get_embedding())
-        db.save_local(vectorstore_path)
     else:
-        db = FAISS.from_documents(
-            chunks,
-            get_embedding()
-        )
-        db.save_local(vectorstore_path)
+        db = FAISS.from_documents(chunks, get_embedding())
+
+    db.save_local(vectorstore_path)
     return db
 
+# Load local FAISS vector store
 def load_vector_store():
     vectorstore_path = get_vectorstore_path()
-    if not os.path.exists(vectorstore_path) or not os.path.exists(os.path.join(vectorstore_path, "index.faiss")):
-        return None
-    try:
-        db = FAISS.load_local(
-            vectorstore_path,
-            get_embedding(),
-            allow_dangerous_deserialization=True
-        )
-        return db
-    except Exception:
-        try:
-            return rebuild_vector_store_from_all_docs()
-        except Exception:
-            return None
+    index_file = os.path.join(vectorstore_path, "index.faiss")
 
+    if not os.path.exists(vectorstore_path) or not os.path.exists(index_file):
+        return None
+
+    try:
+        return FAISS.load_local(vectorstore_path, get_embedding(), allow_dangerous_deserialization=True)
+    except Exception:
+        return rebuild_vector_store_from_all_docs()
+
+# Rebuild entire vector store from database documents
 def rebuild_vector_store_from_all_docs():
     from .models import Document
+
     vectorstore_path = get_vectorstore_path()
     if os.path.exists(vectorstore_path):
-        try:
-            shutil.rmtree(vectorstore_path)
-        except Exception:
-            pass
-            
+        for f in os.listdir(vectorstore_path):
+            file_path = os.path.join(vectorstore_path, f)
+            if os.path.isfile(file_path):
+                try:
+                    os.remove(file_path)
+                except Exception:
+                    pass
+
     all_docs = Document.objects.all()
     all_chunks = []
     for doc in all_docs:
-        if os.path.exists(doc.file.path):
+        if doc.file and os.path.exists(doc.file.path):
             try:
-                docs = load_pdf(doc.file.path)
-                chunks = split_documents(docs)
+                chunks = load_and_split_pdf(doc.file.path)
                 all_chunks.extend(chunks)
             except Exception:
                 pass
-        else:
-            pass
-                
+
     if all_chunks:
-        try:
-            db = FAISS.from_documents(all_chunks, get_embedding())
-            db.save_local(vectorstore_path)
-            return db
-        except Exception:
-            raise
+        db = FAISS.from_documents(all_chunks, get_embedding())
+        db.save_local(vectorstore_path)
+        return db
+
     return None
 
-
+# Search vectorstore for relevant documents
 def search_documents(question):
-    db = load_vector_store()   
+    db = load_vector_store()
     if db is None:
         return []
     try:
-        docs = db.similarity_search(question, k=3)
-        return docs
+        return db.similarity_search(question, k=3)
     except Exception:
         return []
 
+# Generate RAG answer using retrieved contexts
 def generate_answer(question):
-
     docs = search_documents(question)
+
     if not docs:
         lower_q = question.lower().strip().rstrip('?!.')
         if lower_q in ['hi', 'hello', 'hey', 'greetings', 'good morning', 'good afternoon', 'good evening']:
-            return "Hello! How can I help you today? (Note: The knowledge base is currently empty, so I can only answer general greetings.)"
-        return "I'm sorry, I cannot answer this question because no documents have been uploaded to my knowledge base yet. Please upload documents via the admin panel."
+            return "Hello! How can I help you today? (Note: Knowledge base is currently empty.)"
+        return "I'm sorry, I cannot answer this question because no documents have been uploaded to the knowledge base yet."
 
-    context = "\n\n".join(
-        doc.page_content for doc in docs
-    )
+    context = "\n\n".join(doc.page_content for doc in docs)
 
     prompt = f"""
-    You are an AI Customer Support Assistant.
+You are an AI Customer Support Assistant.
+Answer only using the provided context in 1-2 concise sentences.
 
-    Answer only from the provided context.
-    Give a short answer in 1-2 sentences.
+Context:
+{context}
 
-    Context:
-    {context}
-
-    Question:
-    {question}
-    """
+Question:
+{question}
+"""
 
     response = llm.invoke(prompt)
-
     return response.content
-
