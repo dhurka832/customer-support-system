@@ -4,37 +4,37 @@ SupportSphere is a full-stack **Customer Support Platform** built with **Django 
 
 ---
 
-## 🚀 Key Features
+## Key Features
 
-### 1. 🤖 AI Chatbot (`chatbot`)
+### 1. AI Chatbot (`chatbot`)
 - **Real-time AI Support**: Customers ask questions and receive instant answers grounded directly in internal knowledge base documents.
 - **RAG Architecture**: Uses FAISS vector storage + Google AI Embeddings (`gemini-embedding-001`) + Llama 3 (via Groq API) to retrieve relevant context before generating answers.
 - **Streamlined JavaScript**: Clean, lightweight client-side logic for real-time AJAX message processing and session loading.
 - **Access Control**: Dedicated to customer accounts (admins focus exclusively on support operations and knowledge management).
 
-### 2. 🎫 Ticket Management (`support`)
+### 2. Ticket Management (`support`)
 - **Customer Ticket Portal**: Submit support tickets with priority levels (Low, Medium, High) and detailed descriptions.
 - **Interactive Replies**: Staff and customers communicate via threaded replies.
 - **Inline Status Updates**: Staff dynamically update ticket statuses (Open → In Progress → Closed) via AJAX.
 
-### 3. 📚 Knowledge Base (`knowledge_base`)
+### 3. Knowledge Base (`knowledge_base`)
 - **Document Upload**: Staff upload policy handbooks or guides (PDF format).
 - **Automatic Vector Indexing**: Documents are parsed (`pypdf`) and indexed into local FAISS vector storage.
 - **Management Command**: `python manage.py rebuild_vectorstore` command to re-index documents on demand.
 
-### 4. 📊 Admin Dashboard (`accounts`)
+### 4. Admin Dashboard (`accounts`)
 - **System Metrics**: Total registered users, total conversations, total messages, active users today, and per-user averages via Django ORM aggregations.
 - **Customer Directory**: Search, browse, and inspect customer profiles with live conversation counts.
 - **Chat Logs Audit**: Comprehensive log search and date filtering for customer chat sessions.
 - **Global Search**: Unified search across users, conversations, chat messages, and support tickets.
 
-### 5. 🔐 Auth & Simple Login Interface
+### 5. Auth & Simple Login Interface
 - **Split-Panel Login & Register**: Clean layout with branding panel and secure login form.
 - **Clear Demo Credentials**: Simple plain text demo credentials display (`Dhurka` / `Dhurka@345`).
 
 ---
 
-## 🛠️ Tech Stack & Architecture
+## Tech Stack & Architecture
 
 | Layer | Technology |
 |---|---|
@@ -48,36 +48,54 @@ SupportSphere is a full-stack **Customer Support Platform** built with **Django 
 
 ---
 
-## 📁 Project Structure
+## Screenshots
+
+<p align="center">
+  <img src="screenshots/admin-dashboard.jpg" alt="Admin Dashboard View" width="400"/>
+  <img src="screenshots/admin-tickets.jpg" alt="Admin Tickets View" width="400"/>
+  <img src="screenshots/conversation-log.jpg" alt="Conversation Log View" width="400"/>
+  <img src="screenshots/create_ticket.jpg" alt="Create Ticket View" width="400"/>
+  <img src="screenshots/customer-directory.jpg" alt="Customer Directory View" width="400"/>
+  <img src="screenshots/rag_chatbot.jpg" alt="RAG Chatbot View" width="400"/>
+  <img src="screenshots/user_profile.jpg" alt="User Profile View" width="400"/>
+  <img src="screenshots/user_tickets.jpg" alt="User Tickets View" width="400"/>
+  <img src="screenshots/knowledge_base.jpg" alt="Knowledge Base View" width="400"/>
+  <img src="screenshots/login.jpg" alt="Login View" width="400"/>
+  <img src="screenshots/register.jpg" alt="Register View" width="400"/>
+</p>
+
+---
+
+## Project Structure
 
 ```
 customer_support_system/
 │
-├── accounts/                   # User auth, registration & admin dashboard views
-├── chatbot/                    # AI chatbot views, models, RAG integration
-│   ├── models.py                # Conversation / Message / ChatHistory models
-│   └── views.py                 # Chatbot views (customer-focused access)
-├── customer_support_system/    # Django project settings & root URLs
-├── knowledge_base/             # Document upload, text extraction, FAISS RAG logic
-│   ├── rag.py                   # Clean, simplified RAG retrieval pipeline
-│   └── vectorstore/            # FAISS index files (index.faiss, index.pkl)
-├── support/                    # Ticket management views & models
+├── accounts/                   
+├── chatbot/                   
+│   ├── models.py                
+│   └── views.py                 
+├── customer_support_system/   
+├── knowledge_base/             
+│   ├── rag.py                   
+│   └── vectorstore/            
+├── support/                    
 │
 ├── static/
-│   ├── css/                    # Custom CSS styles
+│   ├── css/                    
 │   └── js/
-│       ├── chatbot.js          # Lightweight AJAX chat handler
-│       ├── tickets.js          # AJAX ticket status updates
-│       └── sidebar.js          # Admin sidebar toggle
+│       ├── chatbot.js          
+│       ├── tickets.js          
+│       └── sidebar.js         
 │
-├── templates/                  # HTML templates
+├── templates/                  
 ├── manage.py
 └── requirements.txt
 ```
 
 ---
 
-## ⚙️ Quick Setup
+## Quick Setup
 
 1. **Clone & Virtual Environment**:
    ```bash
@@ -107,7 +125,7 @@ customer_support_system/
 
 ---
 
-## 📦 Key Dependencies
+## Key Dependencies
 
 | Package | Purpose |
 |---|---|
