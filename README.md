@@ -1,40 +1,40 @@
-# SupportSphere — AI-Powered Customer Support System
+# Support Sphere — AI-Powered Customer Support System
 
-SupportSphere is a full-stack **Customer Support Platform** built with **Django 5.2**. It combines a Retrieval-Augmented Generation (RAG) AI chatbot (Llama 3 + FAISS), smart ticket management, a knowledge base document indexing system, and an administrative dashboard — backed by **PostgreSQL**.
+SupportSphere is a full-stack **Customer Support Platform** built with **Django**. It combines a Retrieval-Augmented Generation (RAG) AI chatbot (Llama 3 + FAISS), smart ticket management, a knowledge base document indexing system, and an administrative dashboard backed by **PostgreSQL**.
 
 ---
 
 ## Key Features
 
-### 1. AI Chatbot (`chatbot`)
+### 1. RAG Chatbot
 - **Real-time AI Support**: Customers ask questions and receive instant answers grounded directly in internal knowledge base documents.
 - **RAG Architecture**: Uses FAISS vector storage + Google AI Embeddings (`gemini-embedding-001`) + Llama 3 (via Groq API) to retrieve relevant context before generating answers.
-- **Streamlined JavaScript**: Clean, lightweight client-side logic for real-time AJAX message processing and session loading (`chatbot.js`).
+- **Streamlined JavaScript**: Clean, lightweight client-side logic for real-time AJAX message processing and session loading.
 - **Access Control**: Dedicated to customer accounts (admins focus exclusively on support operations and knowledge management).
 
-### 2. Ticket Management (`support`)
+### 2. Ticket Management
 - **Customer Ticket Portal**: Submit support tickets with priority levels (Low, Medium, High) and detailed descriptions.
 - **Interactive Replies**: Staff and customers communicate via threaded replies.
-- **Inline Status Updates**: Staff dynamically update ticket statuses (Open → In Progress → Closed) via AJAX with real-time feedback (`tickets.js`).
+- **Inline Status Updates**: Staff dynamically update ticket statuses (Open → In Progress → Closed) via AJAX with real-time feedback.
 
-### 3. Knowledge Base (`knowledge_base`)
+### 3. Knowledge Base
 - **Document Upload**: Staff upload policy handbooks or guides (PDF format).
 - **Automatic Vector Indexing**: Documents are parsed (`pypdf`) and indexed into local FAISS vector storage.
 - **Management Command**: `python manage.py rebuild_vectorstore` command to re-index documents on demand.
 
-### 4. Admin Dashboard (`accounts`)
-- **System Metrics & Analytics**: Total registered users, conversations, messages, active users today, and dynamic traffic trends rendered with Chart.js (`dashboard-chart.js`).
-- **Customer Directory**: Search, browse, and inspect customer profiles with live conversation counts and interactive delete confirmation (`customers.js`).
+### 4. Admin Dashboard
+- **System Metrics & Analytics**: Total registered users, conversations, messages, active users today, and dynamic traffic trends rendered with Chart.js.
+- **Customer Directory**: Search, browse, and inspect customer profiles with live conversation counts and interactive delete confirmation.
 - **Chat Logs Audit**: Comprehensive log search and date filtering for customer chat sessions.
-- **Global Search & Navigation**: Unified search across users, conversations, chat messages, and tickets, plus a responsive toggleable sidebar (`sidebar.js`).
+- **Global Search & Navigation**: Unified search across users, conversations, chat messages, and tickets, plus a responsive toggleable sidebar.
 
 ### 5. Auth & Simple Login Interface
 - **Split-Panel Login & Register**: Clean layout with branding panel and secure login form.
-- **Clear Demo Credentials**: Simple plain text demo credentials display (`Dhurka` / `Dhurka@345`).
+- **Demo Credentials**: Simple plain text demo credentials display (`Dhurka` / `Dhurka@345`).
 
 ---
 
-## Tech Stack & Architecture
+## Tech Stack 
 
 | Layer | Technology |
 |---|---|
