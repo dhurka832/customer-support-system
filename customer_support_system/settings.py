@@ -17,27 +17,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
-# SECURITY WARNING: don't run with debug turned on in production!
+
 DEBUG = os.getenv("DEBUG") == "True"
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "customer-support-system-3hyq.onrender.com",
 ]
-
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -82,15 +71,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'customer_support_system.wsgi.application'
 
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-#
-# Reads the DATABASE_URL environment variable (see .env). Point it at a
-# PostgreSQL instance, e.g.:
-#   DATABASE_URL=postgres://USER:PASSWORD@HOST:5432/DBNAME
-# Falls back to local sqlite only if DATABASE_URL isn't set (e.g. first run
-# before Postgres is configured).
 if DATABASE_URL:
     DATABASES = {
         "default": dj_database_url.parse(
@@ -106,8 +88,6 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -124,10 +104,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -135,10 +111,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
@@ -150,9 +122,6 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / 'media'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
