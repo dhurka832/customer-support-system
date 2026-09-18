@@ -304,20 +304,33 @@
     font-weight: 600;
     color: #1e293b;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     flex: 1;
     user-select: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
 .demo-cred-pill:hover {
     background: #f8f7ff;
     border-color: #6366f1;
     color: #6366f1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+}
+
+.demo-cred-pill:active {
+    transform: translateY(0) scale(0.97);
 }
 
 .demo-cred-pill i {
     color: #94a3b8;
     font-size: 0.75rem;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.demo-cred-pill:hover i {
+    color: #6366f1;
+    transform: scale(1.15);
 }
 
 .demo-cred-pill .cred-key {
@@ -349,6 +362,12 @@
 .form-group-modern label i {
     color: #9ca3af;
     font-size: 0.85rem;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.form-group-modern:focus-within label i {
+    color: #6366f1;
+    transform: scale(1.1);
 }
 
 .form-group-modern input,
@@ -360,7 +379,7 @@
     font-size: 0.9rem;
     font-family: 'Inter', sans-serif;
     background: #fafafa;
-    transition: all 0.2s ease;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, transform 0.2s ease;
     color: #0f172a;
     box-sizing: border-box;
 }
@@ -375,13 +394,14 @@
     outline: none;
     border-color: #6366f1;
     background: #ffffff;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.14);
+    transform: translateY(-1px);
 }
 
 .auth-page-wrapper.register-mode .form-group-modern input:focus,
 .auth-page-wrapper.register-mode .form-group-modern select:focus {
     border-color: #10b981;
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.14);
 }
 
 .form-group-modern input:hover {

@@ -102,12 +102,12 @@ body {
 }
 
 .hover-elevate {
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, border-color 0.3s ease;
     border-radius: 12px;
 }
 .hover-elevate:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04) !important;
+    transform: translateY(-4px) scale(1.005);
+    box-shadow: 0 14px 30px -5px rgba(0, 0, 0, 0.08), 0 8px 12px -6px rgba(0, 0, 0, 0.04) !important;
 }
 
 .btn-modern-primary {
@@ -117,12 +117,17 @@ body {
     font-weight: 600;
     border-radius: 8px;
     padding: 0.5rem 1.2rem;
-    transition: all 0.2s;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
 }
 .btn-modern-primary:hover {
     opacity: 0.95;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 6px 18px rgba(59, 130, 246, 0.35);
+    transform: translateY(-1px);
     color: white;
+}
+.btn-modern-primary:active {
+    transform: translateY(0) scale(0.97);
 }
 
 .btn-modern-outline {
@@ -132,11 +137,16 @@ body {
     font-weight: 600;
     border-radius: 8px;
     padding: 0.5rem 1.2rem;
-    transition: all 0.2s;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .btn-modern-outline:hover {
     background: #f1f5f9;
     color: #1e293b;
+    border-color: #94a3b8;
+    transform: translateY(-1px);
+}
+.btn-modern-outline:active {
+    transform: translateY(0) scale(0.97);
 }
 
 .table-modern {
@@ -162,24 +172,36 @@ body {
 .table-modern td {
     padding: 14px;
     border-bottom: 1px solid #f1f5f9;
+    transition: background-color 0.2s ease;
+}
+
+.table-modern tbody tr {
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.table-modern tbody tr:hover {
+    background-color: rgba(59, 130, 246, 0.03);
 }
 
 .badge-open {
     background-color: #fef2f2;
     color: #ef4444;
     border: 1px solid #fca5a5;
+    transition: all 0.2s ease;
 }
 
 .badge-progress {
     background-color: #fffbeb;
     color: #d97706;
     border: 1px solid #fde047;
+    transition: all 0.2s ease;
 }
 
 .badge-closed {
     background-color: #f0fdf4;
     color: #16a34a;
     border: 1px solid #86efac;
+    transition: all 0.2s ease;
 }
 
 @media (max-width: 768px) {

@@ -12,7 +12,7 @@
 
 <div class="row g-3">
     {% for ticket in tickets %}
-        <div class="col-12">
+        <div class="col-12 animate-slide-up">
             <div class="card card-modern p-3">
                 <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
                     <div class="d-flex align-items-center gap-3">
@@ -27,19 +27,29 @@
                     
                     <div class="d-flex align-items-center gap-3 flex-wrap">
                         {% if ticket.priority == 'High' %}
-                            <span class="badge bg-danger bg-opacity-10 text-danger border border-danger px-3 py-2 rounded-pill small">High</span>
+                            <span class="badge bg-danger bg-opacity-10 text-danger border border-danger px-3 py-2 rounded-pill small">
+                                <span class="badge-pulse-dot danger"></span>High
+                            </span>
                         {% elif ticket.priority == 'Medium' %}
-                            <span class="badge bg-warning bg-opacity-10 text-warning border border-warning px-3 py-2 rounded-pill small">Medium</span>
+                            <span class="badge bg-warning bg-opacity-10 text-warning border border-warning px-3 py-2 rounded-pill small">
+                                <span class="badge-pulse-dot warning"></span>Medium
+                            </span>
                         {% else %}
                             <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary px-3 py-2 rounded-pill small">Low</span>
                         {% endif %}
 
                         {% if ticket.status == 'Open' %}
-                            <span class="badge rounded-pill bg-danger px-3 py-2">Open</span>
+                            <span class="badge rounded-pill bg-danger px-3 py-2">
+                                <span class="badge-pulse-dot danger"></span>Open
+                            </span>
                         {% elif ticket.status == 'In Progress' %}
-                            <span class="badge rounded-pill bg-warning text-dark px-3 py-2">In Progress</span>
+                            <span class="badge rounded-pill bg-warning text-dark px-3 py-2">
+                                <span class="badge-pulse-dot warning"></span>In Progress
+                            </span>
                         {% else %}
-                            <span class="badge rounded-pill bg-success px-3 py-2">Closed</span>
+                            <span class="badge rounded-pill bg-success px-3 py-2">
+                                <span class="badge-pulse-dot success"></span>Closed
+                            </span>
                         {% endif %}
 
                         <div class="btn-group gap-2">
