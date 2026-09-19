@@ -91,7 +91,6 @@
     scroll-behavior: smooth;
 }
 
-/* Chat Message Pop-in Animation */
 @keyframes msgPopIn {
     0% {
         opacity: 0;
