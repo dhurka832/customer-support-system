@@ -27,20 +27,27 @@ An enterprise-grade, full-stack **Customer Support & Operations Platform** built
 
 ---
 
-## Screenshots 
+## Preview
 
-<img src="screenshots/admin-dashboard.jpg" width="300" height="200">
-<img src="screenshots/admin-support-tickets.jpg" width="300" height="200">
-<img src="screenshots/conversation-log.jpg" width="300" height="200">
-<img src="screenshots/customer-directory.jpg" width="300" height="200">
-<img src="screenshots/customer-support-tickets.jpg" width="300" height="200">
-<img src="screenshots/create-ticket.jpg" width="300" height="200">
-<img src="screenshots/rag-chatbot.jpg" width="300" height="200">
-<img src="screenshots/user-profile.jpg" width="300" height="200">
-<img src="screenshots/knowledge-base.jpg" width="300" height="200">
-<img src="screenshots/knowledge_base_documents.jpg" width="300" height="200">
-<img src="screenshots/register.jpg" width="300" height="200">
-<img src="screenshots/login.jpg" width="300" height="200">
+<p align="center">
+  <img src="screenshots/admin-dashboard.jpg" width="48%"/>
+  <img src="screenshots/admin-support-tickets.jpg" width="48%"/>
+</p>
+
+<p align="center">
+  <img src="screenshots/rag-chatbot.jpg" width="48%"/>
+  <img src="screenshots/user-profile.jpg" width="48%"/>
+</p>
+
+<p align="center">
+  <img src="screenshots/customer-directory.jpg" width="48%"/>
+  <img src="screenshots/customer-support-tickets.jpg" width="48%"/>
+</p>
+
+<p align="center">
+  <img src="screenshots/conversation-log.jpg" width="48%"/>
+  <img src="screenshots/knowledge_base_documents.jpg" width="48%"/>
+</p>
 
 ---
 
