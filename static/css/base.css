@@ -1,18 +1,10 @@
-/* ==========================================================================
-   SUPPORTSPHERE - MODERN ENTERPRISE DESIGN SYSTEM
-   Pure HTML, Modern CSS (Grid/Flex/Custom Properties), and Vanilla JS
-   Zero Bootstrap Dependency • Creative Card Architecture • Handcrafted UX
-   ========================================================================== */
-
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
-/* --- DESIGN TOKENS --- */
 :root {
     --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
 
-    /* Primary Accent Palette */
     --primary-50: #eef2ff;
     --primary-100: #e0e7ff;
     --primary-200: #c7d2fe;
@@ -24,7 +16,6 @@
     --primary-800: #3730a3;
     --primary-900: #312e81;
 
-    /* Semantic Accents */
     --accent-emerald: #10b981;
     --accent-emerald-subtle: rgba(16, 185, 129, 0.12);
     --accent-emerald-border: rgba(16, 185, 129, 0.25);
@@ -43,7 +34,6 @@
     --accent-sky: #0ea5e9;
     --accent-sky-subtle: rgba(14, 165, 233, 0.12);
 
-    /* Slate Neutral Spectrum */
     --slate-950: #090d16;
     --slate-900: #0f172a;
     --slate-850: #162032;
@@ -58,7 +48,6 @@
     --slate-100: #f1f5f9;
     --slate-50: #f8fafc;
 
-    /* Surface & Background */
     --bg-page: #f8fafc;
     --bg-card: #ffffff;
     --bg-card-glass: rgba(255, 255, 255, 0.92);
@@ -71,7 +60,6 @@
     --text-muted: #64748b;
     --text-subtle: #94a3b8;
 
-    /* Creative Gradients */
     --grad-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
     --grad-primary-hover: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
     --grad-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
@@ -83,7 +71,6 @@
                  radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 40%),
                  radial-gradient(at 50% 100%, rgba(139, 92, 246, 0.06) 0px, transparent 50%);
 
-    /* Elevation & Shadows */
     --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
     --shadow-sm: 0 2px 8px -2px rgba(15, 23, 42, 0.06), 0 1px 4px -1px rgba(15, 23, 42, 0.03);
     --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.06), 0 8px 10px -6px rgba(15, 23, 42, 0.03);
@@ -91,7 +78,6 @@
     --shadow-xl: 0 25px 50px -12px rgba(15, 23, 42, 0.18);
     --shadow-glow-indigo: 0 0 25px -2px rgba(99, 102, 241, 0.35);
 
-    /* Radii */
     --radius-xs: 6px;
     --radius-sm: 8px;
     --radius-md: 12px;
@@ -99,12 +85,10 @@
     --radius-xl: 22px;
     --radius-full: 9999px;
 
-    /* Transitions */
     --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
     --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* --- RESET & GLOBAL STYLES --- */
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -161,9 +145,6 @@ h4 { font-size: 1.1rem; font-weight: 700; }
 h5 { font-size: 0.95rem; font-weight: 600; }
 h6 { font-size: 0.85rem; font-weight: 600; }
 
-/* ==========================================================================
-   PURE CSS GRID & FLEX ENGINE (NO BOOTSTRAP)
-   ========================================================================== */
 .container {
     width: 100%;
     max-width: 1240px;
@@ -179,7 +160,6 @@ h6 { font-size: 0.85rem; font-weight: 600; }
     padding-right: 1.5rem;
 }
 
-/* Flexbox utilities */
 .flex { display: flex; }
 .inline-flex { display: inline-flex; }
 .flex-col { flex-direction: column; }
@@ -205,7 +185,6 @@ h6 { font-size: 0.85rem; font-weight: 600; }
 .gap-4 { gap: 1.5rem; }
 .gap-5 { gap: 2rem; }
 
-/* Grid utilities */
 .grid { display: grid; gap: 1.5rem; }
 .grid-1 { grid-template-columns: 1fr; }
 .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -230,7 +209,6 @@ h6 { font-size: 0.85rem; font-weight: 600; }
     gap: 1.5rem;
 }
 
-/* Sizing */
 .w-100 { width: 100%; }
 .h-100 { height: 100%; }
 .min-w-0 { min-width: 0; }
@@ -238,7 +216,6 @@ h6 { font-size: 0.85rem; font-weight: 600; }
 .max-w-lg { max-width: 680px; }
 .max-w-xl { max-width: 900px; }
 
-/* Spacing */
 .m-0 { margin: 0; }
 .mt-1 { margin-top: 0.25rem; }
 .mt-2 { margin-top: 0.5rem; }
@@ -283,7 +260,6 @@ h6 { font-size: 0.85rem; font-weight: 600; }
 .py-4 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
 .py-5 { padding-top: 2.25rem; padding-bottom: 2.25rem; }
 
-/* Typography Helpers */
 .text-center { text-align: center; }
 .text-start { text-align: start; }
 .text-end { text-align: end; }
@@ -312,11 +288,6 @@ h6 { font-size: 0.85rem; font-weight: 600; }
     white-space: nowrap;
 }
 
-/* ==========================================================================
-   CREATIVE CARD SYSTEM (IMPRESSIVE & HANDCRAFTED)
-   ========================================================================== */
-
-/* 1. Master Modern Card */
 .card-modern {
     background: var(--bg-card);
     border: 1px solid var(--border-subtle);
@@ -337,7 +308,6 @@ h6 { font-size: 0.85rem; font-weight: 600; }
     box-shadow: var(--shadow-lg);
 }
 
-/* 2. Bento Stat Card (Visual Metrics) */
 .bento-stat-card {
     background: #ffffff;
     border: 1px solid var(--border-subtle);
@@ -432,7 +402,6 @@ h6 { font-size: 0.85rem; font-weight: 600; }
     color: #475569;
 }
 
-/* 3. Hero Welcome Card */
 .hero-welcome-card {
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #172554 100%);
     border-radius: var(--radius-xl);
@@ -456,7 +425,6 @@ h6 { font-size: 0.85rem; font-weight: 600; }
     pointer-events: none;
 }
 
-/* 4. Quick Action Cards Deck */
 .quick-action-card {
     background: #ffffff;
     border: 1px solid var(--border-subtle);
@@ -487,7 +455,6 @@ h6 { font-size: 0.85rem; font-weight: 600; }
     flex-shrink: 0;
 }
 
-/* 5. Support Ticket Interactive Card */
 .ticket-item-card {
     background: #ffffff;
     border: 1px solid var(--border-subtle);
@@ -533,7 +500,6 @@ h6 { font-size: 0.85rem; font-weight: 600; }
     border-top: 1px dashed var(--border-subtle);
 }
 
-/* 6. Document / Knowledge Base Card */
 .doc-item-card {
     background: #ffffff;
     border: 1px solid var(--border-subtle);
@@ -567,7 +533,6 @@ h6 { font-size: 0.85rem; font-weight: 600; }
     box-shadow: 0 4px 12px rgba(244, 63, 94, 0.15);
 }
 
-/* 7. Modern Data Card Table */
 .data-card-table-wrapper {
     background: #ffffff;
     border: 1px solid var(--border-subtle);
@@ -628,7 +593,6 @@ h6 { font-size: 0.85rem; font-weight: 600; }
     -webkit-overflow-scrolling: touch;
 }
 
-/* 8. Filter Bar Card */
 .filter-bar-card {
     background: #ffffff;
     border: 1px solid var(--border-subtle);
@@ -642,9 +606,6 @@ h6 { font-size: 0.85rem; font-weight: 600; }
     gap: 1rem;
 }
 
-/* ==========================================================================
-   BUTTON & INTERACTIVE SYSTEM
-   ========================================================================== */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -788,9 +749,6 @@ h6 { font-size: 0.85rem; font-weight: 600; }
     gap: 0.35rem;
 }
 
-/* ==========================================================================
-   BADGES & STATUS PILLS
-   ========================================================================== */
 .badge {
     display: inline-flex;
     align-items: center;
@@ -874,9 +832,6 @@ h6 { font-size: 0.85rem; font-weight: 600; }
     border-radius: var(--radius-full);
 }
 
-/* ==========================================================================
-   FORM CONTROLS & INPUTS
-   ========================================================================== */
 .form-group {
     margin-bottom: 1.25rem;
 }
@@ -935,7 +890,6 @@ textarea.form-control {
     border-bottom-left-radius: 0;
 }
 
-/* Avatar Pill */
 .avatar-circle {
     width: 38px;
     height: 38px;
@@ -950,9 +904,6 @@ textarea.form-control {
     flex-shrink: 0;
 }
 
-/* ==========================================================================
-   NAVIGATION BAR (PORTAL)
-   ========================================================================== */
 .navbar-modern {
     background: rgba(15, 23, 42, 0.95);
     backdrop-filter: blur(16px);
@@ -1062,9 +1013,6 @@ textarea.form-control {
     padding: 0.25rem 0.5rem;
 }
 
-/* ==========================================================================
-   DROPDOWNS & MODALS
-   ========================================================================== */
 .dropdown {
     position: relative;
     display: inline-block;
@@ -1206,9 +1154,6 @@ textarea.form-control {
     opacity: 1;
 }
 
-/* ==========================================================================
-   TOAST NOTIFICATIONS
-   ========================================================================== */
 .toast-container {
     position: fixed;
     bottom: 24px;
@@ -1248,9 +1193,6 @@ textarea.form-control {
 .toast-pill.toast-error i { color: var(--accent-rose); }
 .toast-pill.toast-info i { color: var(--primary-500); }
 
-/* ==========================================================================
-   PAGINATION (CREATIVE PILL DESIGN)
-   ========================================================================== */
 .pagination-modern {
     display: flex;
     align-items: center;
@@ -1299,9 +1241,6 @@ textarea.form-control {
     background: var(--slate-50);
 }
 
-/* ==========================================================================
-   ANIMATIONS & RESPONSIVE BREAKPOINTS
-   ========================================================================== */
 @keyframes fadeIn {
     from { opacity: 0; }
     to   { opacity: 1; }

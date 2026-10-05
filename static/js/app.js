@@ -1,9 +1,3 @@
-/**
- * SupportSphere Vanilla JS UI Engine
- * Pure Vanilla JavaScript: Accordions, Modals, Dropdowns, Toast, Mobile Navigation.
- * Zero Bootstrap Dependency.
- */
-
 document.addEventListener('DOMContentLoaded', () => {
     initDropdowns();
     initCollapses();
@@ -13,9 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initQuickPrompts();
 });
 
-/* ==========================================================================
-   DROPDOWNS
-   ========================================================================== */
 function initDropdowns() {
     const dropdownToggles = document.querySelectorAll('[data-toggle="dropdown"], [data-bs-toggle="dropdown"]');
     
@@ -27,7 +18,6 @@ function initDropdowns() {
             const dropdownContainer = toggle.closest('.dropdown') || toggle.parentElement;
             const menu = dropdownContainer.querySelector('.dropdown-menu');
             
-            // Close other open dropdowns
             document.querySelectorAll('.dropdown-menu.show').forEach(openMenu => {
                 if (openMenu !== menu) {
                     openMenu.classList.remove('show');
@@ -40,7 +30,6 @@ function initDropdowns() {
         });
     });
 
-    // Close dropdowns when clicking outside
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.dropdown')) {
             document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
@@ -50,9 +39,6 @@ function initDropdowns() {
     });
 }
 
-/* ==========================================================================
-   COLLAPSE & ACCORDION (SMOOTH HEIGHT TRANSITION)
-   ========================================================================== */
 function initCollapses() {
     const collapseToggles = document.querySelectorAll('[data-toggle="collapse"], [data-bs-toggle="collapse"]');
     
@@ -103,9 +89,6 @@ function initCollapses() {
     });
 }
 
-/* ==========================================================================
-   MODAL CONTROLLER (BOOTSTRAP-FREE)
-   ========================================================================== */
 function initModals() {
     const modalToggles = document.querySelectorAll('[data-toggle="modal"], [data-bs-toggle="modal"]');
     const modalDismisses = document.querySelectorAll('[data-dismiss="modal"], [data-bs-dismiss="modal"]');
@@ -132,7 +115,6 @@ function initModals() {
         });
     });
 
-    // Close when clicking modal backdrop
     document.querySelectorAll('.modal, .modal-backdrop-custom').forEach(modal => {
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
@@ -141,7 +123,6 @@ function initModals() {
         });
     });
 
-    // Close on Escape key press
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             document.querySelectorAll('.modal.show, .modal-backdrop-custom.show').forEach(modal => {
@@ -167,9 +148,6 @@ function closeModal(modal) {
     }, 200);
 }
 
-/* ==========================================================================
-   MOBILE NAVIGATION & SIDEBAR
-   ========================================================================== */
 function initMobileNav() {
     const navToggle = document.getElementById('navbarToggle') || document.querySelector('[data-bs-toggle="collapse"][data-bs-target="#navbarContent"]');
     const navContent = document.getElementById('navbarContent');
@@ -198,7 +176,6 @@ function initMobileNav() {
         });
     }
 
-    // Close sidebar on mobile when clicked outside
     document.addEventListener('click', (e) => {
         if (sidebar && sidebar.classList.contains('active') && !sidebar.contains(e.target) && !sidebarCollapse.contains(e.target)) {
             sidebar.classList.remove('active');
@@ -206,9 +183,6 @@ function initMobileNav() {
     });
 }
 
-/* ==========================================================================
-   DEMO CREDENTIALS QUICK-FILL
-   ========================================================================== */
 function initDemoCredentials() {
     const credPills = document.querySelectorAll('.demo-cred-pill');
     credPills.forEach(pill => {
@@ -230,7 +204,6 @@ function initDemoCredentials() {
                 setTimeout(() => passInput.style.borderColor = '', 800);
             }
 
-            // Show feedback
             const originalHtml = pill.innerHTML;
             pill.innerHTML = `<i class="bi bi-check-circle-fill text-success"></i> <span class="cred-val text-success">Filled!</span>`;
             setTimeout(() => {
@@ -240,9 +213,6 @@ function initDemoCredentials() {
     });
 }
 
-/* ==========================================================================
-   CHAT QUICK PROMPT CHIPS
-   ========================================================================== */
 function initQuickPrompts() {
     const promptChips = document.querySelectorAll('.prompt-chip');
     const userInput = document.getElementById('userInput');
@@ -258,9 +228,6 @@ function initQuickPrompts() {
     });
 }
 
-/* ==========================================================================
-   TOAST NOTIFICATION HELPER
-   ========================================================================== */
 window.showToast = function(message, type = 'success') {
     let container = document.getElementById('toastContainer');
     if (!container) {

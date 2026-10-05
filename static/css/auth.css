@@ -1,8 +1,3 @@
-/* ==========================================================================
-   SUPPORTSPHERE - AUTHENTICATION SUITE (LOGIN & REGISTER)
-   Professional, Bespoke, Handcrafted SaaS Aesthetics
-   ========================================================================== */
-
 .auth-viewport {
     min-height: 100vh;
     width: 100%;
@@ -20,7 +15,6 @@
     box-sizing: border-box;
 }
 
-/* Background Texture */
 .auth-grid-overlay {
     position: absolute;
     inset: 0;
@@ -31,7 +25,6 @@
     pointer-events: none;
 }
 
-/* Master Auth Card Container */
 .auth-master-card {
     width: 100%;
     max-width: 1020px;
@@ -57,7 +50,6 @@
     }
 }
 
-/* --- LEFT SHOWCASE COLUMN --- */
 .auth-showcase-panel {
     flex: 1.1;
     background: linear-gradient(145deg, #111827 0%, #0d1322 100%);
@@ -120,7 +112,6 @@
     margin-bottom: 2rem;
 }
 
-/* Showcase Metrics & Activity Card */
 .auth-widget-card {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -179,7 +170,6 @@
     font-size: 0.78rem;
 }
 
-/* --- RIGHT FORM COLUMN --- */
 .auth-form-panel {
     flex: 1;
     background: #ffffff;
@@ -222,7 +212,6 @@
     font-size: 0.88rem;
 }
 
-/* Demo Credential Card */
 .demo-access-card {
     background: #f8fafc;
     border: 1px solid var(--border-subtle);
@@ -271,7 +260,6 @@
     transform: translateY(0);
 }
 
-/* Form Inputs */
 .auth-input-group {
     margin-bottom: 1.15rem;
 }
@@ -426,7 +414,6 @@
     font-size: 0.84rem;
 }
 
-/* Responsive adjustments */
 @media (max-width: 900px) {
     .auth-showcase-panel {
         display: none;
