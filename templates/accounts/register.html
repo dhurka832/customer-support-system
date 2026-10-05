@@ -2,195 +2,243 @@
 
 {% block extra_css %}
 {% load static %}
-<link href="{% static 'css/auth.css' %}?v=2.1" rel="stylesheet">
+<link href="{% static 'css/auth.css' %}?v=4.2.0" rel="stylesheet">
 <style>
-  .navbar-modern { display: none !important; }
-  html, body {
-      background: #0f0f1a !important;
+  .navbar-modern, footer { display: none !important; }
+  body {
+      background-color: #0c1017 !important;
       margin: 0;
       padding: 0;
-      min-height: 100%;
+      min-height: 100vh;
   }
 </style>
 {% endblock extra_css %}
 
 {% block content %}
-<div class="auth-page-wrapper register-mode">
+<div class="auth-viewport">
+    <div class="auth-grid-overlay"></div>
 
-    <div class="auth-branding">
-        <div class="auth-branding-grid"></div>
-        <div class="orb-accent"></div>
-        <div class="auth-branding-content">
+    <div class="auth-master-card" style="max-width: 1060px;">
+        <!-- Left Showcase Panel -->
+        <div class="auth-showcase-panel">
+            <div>
+                <a href="/" class="auth-brand-badge">
+                    <div class="auth-brand-icon">
+                        <i class="bi bi-cpu-fill"></i>
+                    </div>
+                    <span class="auth-brand-name">SupportSphere</span>
+                </a>
 
-            <div class="auth-logo">
-                <div class="auth-logo-icon">
-                    <i class="bi bi-cpu-fill"></i>
+                <h1 class="auth-headline">
+                    Join the modern <span class="auth-headline-accent">support platform.</span>
+                </h1>
+
+                <p class="auth-description">
+                    Create your free customer account to submit tickets, view real-time status updates, and consult the AI support assistant.
+                </p>
+
+                <!-- Value Highlights Widget -->
+                <div class="auth-widget-card">
+                    <div class="auth-widget-header">
+                        <span class="auth-widget-title">
+                            <i class="bi bi-stars me-1"></i> Included with account
+                        </span>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <div class="flex items-center gap-2 text-white fs-xs">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <span>24/7 AI Knowledge Retrieval Assistant</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-white fs-xs">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <span>Direct Support Ticket Filing &amp; Timeline Updates</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-white fs-xs">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <span>Complete Conversation &amp; Inquiry History</span>
+                        </div>
+                    </div>
                 </div>
-                <span class="auth-logo-text">SupportSphere</span>
             </div>
 
-            <h2 class="auth-brand-headline">
-                Join thousands<br>already <span class="gradient-word">supported</span>
-            </h2>
-
-            <p class="auth-brand-sub">
-                Create your free account and experience the next generation of AI-powered customer support — instant, intelligent, and always on.
-            </p>
-
-            <div class="auth-feature-list">
-                <div class="auth-feature-item">
-                    <div class="auth-feature-dot indigo">
-                        <i class="bi bi-lightning-charge-fill"></i>
-                    </div>
-                    <span class="auth-feature-label">Instant setup — live in under a minute</span>
-                </div>
-                <div class="auth-feature-item">
-                    <div class="auth-feature-dot violet">
-                        <i class="bi bi-chat-dots-fill"></i>
-                    </div>
-                    <span class="auth-feature-label">Full chat history & conversation threads</span>
-                </div>
-                <div class="auth-feature-item">
-                    <div class="auth-feature-dot emerald">
-                        <i class="bi bi-lock-fill"></i>
-                    </div>
-                    <span class="auth-feature-label">Secure — no credit card required</span>
-                </div>
+            <div class="auth-showcase-footer">
+                <i class="bi bi-lock-fill text-primary"></i>
+                <span>Free registration &bull; No payment information required</span>
             </div>
         </div>
-    </div>
 
-    <div class="auth-form-panel">
-        <div class="auth-form-inner">
-
+        <!-- Right Form Panel -->
+        <div class="auth-form-panel">
             <div class="auth-form-header">
-                <div class="auth-form-badge register">
-                    <i class="bi bi-person-plus-fill"></i> New Account
-                </div>
-                <h1 class="auth-form-title">Create account</h1>
-                <p class="auth-form-subtitle">Join SupportSphere and get started today</p>
+                <span class="auth-form-tag">
+                    <i class="bi bi-person-plus-fill"></i> New Account Registration
+                </span>
+                <h2 class="auth-form-title">Create an account</h2>
+                <p class="auth-form-subtitle">Fill in the details below to get started in seconds</p>
             </div>
 
             <form method="post" id="registerForm">
                 {% csrf_token %}
 
                 {% if form.non_field_errors %}
-                    <div class="auth-error-box">
+                    <div class="auth-alert-error">
                         {% for error in form.non_field_errors %}
-                            <p><i class="bi bi-exclamation-circle"></i> {{ error }}</p>
+                            <div class="flex items-center gap-2">
+                                <i class="bi bi-exclamation-circle-fill"></i>
+                                <span>{{ error }}</span>
+                            </div>
                         {% endfor %}
                     </div>
                 {% endif %}
 
+                <!-- Name Row if present -->
                 {% if form.first_name or form.last_name %}
-                <div class="form-row">
+                <div class="grid grid-2 gap-3 mb-2">
                     {% if form.first_name %}
-                        <div class="form-group-modern">
-                            <label for="{{ form.first_name.id_for_label }}">
-                                <i class="bi bi-person"></i> First Name
-                            </label>
-                            {{ form.first_name }}
-                            {{ form.first_name.errors }}
+                    <div class="auth-input-group mb-0">
+                        <label class="auth-input-label" for="{{ form.first_name.id_for_label }}">First Name</label>
+                        <div class="auth-input-wrapper">
+                            <i class="bi bi-person auth-input-icon"></i>
+                            <input type="text" name="first_name" id="{{ form.first_name.id_for_label }}" class="auth-input" placeholder="First Name" value="{{ form.first_name.value|default:'' }}">
                         </div>
+                        {% if form.first_name.errors %}<div class="text-danger fs-xs mt-1">{{ form.first_name.errors }}</div>{% endif %}
+                    </div>
                     {% endif %}
+
                     {% if form.last_name %}
-                        <div class="form-group-modern">
-                            <label for="{{ form.last_name.id_for_label }}">
-                                <i class="bi bi-person"></i> Last Name
-                            </label>
-                            {{ form.last_name }}
-                            {{ form.last_name.errors }}
+                    <div class="auth-input-group mb-0">
+                        <label class="auth-input-label" for="{{ form.last_name.id_for_label }}">Last Name</label>
+                        <div class="auth-input-wrapper">
+                            <i class="bi bi-person auth-input-icon"></i>
+                            <input type="text" name="last_name" id="{{ form.last_name.id_for_label }}" class="auth-input" placeholder="Last Name" value="{{ form.last_name.value|default:'' }}">
                         </div>
+                        {% if form.last_name.errors %}<div class="text-danger fs-xs mt-1">{{ form.last_name.errors }}</div>{% endif %}
+                    </div>
                     {% endif %}
                 </div>
                 {% endif %}
 
+                <!-- Username -->
                 {% if form.username %}
-                    <div class="form-group-modern">
-                        <label for="{{ form.username.id_for_label }}">
-                            <i class="bi bi-at"></i> Username
-                        </label>
-                        {{ form.username }}
-                        {% if form.username.errors %}
-                            {{ form.username.errors }}
-                        {% elif form.username.help_text %}
-                            <div class="field-help">
-                                <i class="bi bi-info-circle"></i>
-                                <span>{{ form.username.help_text|safe }}</span>
-                            </div>
-                        {% endif %}
+                <div class="auth-input-group">
+                    <label class="auth-input-label" for="{{ form.username.id_for_label }}">Username</label>
+                    <div class="auth-input-wrapper">
+                        <i class="bi bi-at auth-input-icon"></i>
+                        <input type="text" name="username" id="{{ form.username.id_for_label }}" class="auth-input" placeholder="Choose a unique username" required value="{{ form.username.value|default:'' }}" autocomplete="username">
                     </div>
+                    {% if form.username.errors %}
+                        <div class="text-danger fs-xs mt-1">{{ form.username.errors }}</div>
+                    {% endif %}
+                </div>
                 {% endif %}
 
+                <!-- Email -->
                 {% if form.email %}
-                    <div class="form-group-modern">
-                        <label for="{{ form.email.id_for_label }}">
-                            <i class="bi bi-envelope"></i> Email Address
-                        </label>
-                        {{ form.email }}
-                        {{ form.email.errors }}
+                <div class="auth-input-group">
+                    <label class="auth-input-label" for="{{ form.email.id_for_label }}">Email Address</label>
+                    <div class="auth-input-wrapper">
+                        <i class="bi bi-envelope auth-input-icon"></i>
+                        <input type="email" name="email" id="{{ form.email.id_for_label }}" class="auth-input" placeholder="name@company.com" required value="{{ form.email.value|default:'' }}" autocomplete="email">
                     </div>
+                    {% if form.email.errors %}
+                        <div class="text-danger fs-xs mt-1">{{ form.email.errors }}</div>
+                    {% endif %}
+                </div>
                 {% endif %}
 
+                <!-- Password 1 -->
                 {% if form.password1 %}
-                    <div class="form-group-modern">
-                        <label for="{{ form.password1.id_for_label }}">
-                            <i class="bi bi-lock"></i> Password
-                        </label>
-                        {{ form.password1 }}
-                        {% if form.password1.errors %}
-                            {{ form.password1.errors }}
-                        {% elif form.password1.help_text %}
-                            <div class="field-help">
-                                <i class="bi bi-lightbulb"></i>
-                                <span>{{ form.password1.help_text|safe }}</span>
-                            </div> 
-                        {% endif %}
+                <div class="auth-input-group">
+                    <label class="auth-input-label" for="{{ form.password1.id_for_label }}">Password</label>
+                    <div class="auth-input-wrapper">
+                        <i class="bi bi-key auth-input-icon"></i>
+                        <input type="password" name="password1" id="{{ form.password1.id_for_label }}" class="auth-input" placeholder="Create a secure password" required autocomplete="new-password">
+                        <button type="button" class="password-toggle-btn" data-target="{{ form.password1.id_for_label }}">
+                            <i class="bi bi-eye"></i>
+                        </button>
                     </div>
+                    {% if form.password1.errors %}
+                        <div class="text-danger fs-xs mt-1">{{ form.password1.errors }}</div>
+                    {% endif %}
+                </div>
                 {% elif form.password %}
-                    <div class="form-group-modern">
-                        <label for="{{ form.password.id_for_label }}">
-                            <i class="bi bi-lock"></i> Password
-                        </label>
-                        {{ form.password }}
-                        {{ form.password.errors }}
+                <div class="auth-input-group">
+                    <label class="auth-input-label" for="{{ form.password.id_for_label }}">Password</label>
+                    <div class="auth-input-wrapper">
+                        <i class="bi bi-key auth-input-icon"></i>
+                        <input type="password" name="password" id="{{ form.password.id_for_label }}" class="auth-input" placeholder="Create a secure password" required autocomplete="new-password">
+                        <button type="button" class="password-toggle-btn" data-target="{{ form.password.id_for_label }}">
+                            <i class="bi bi-eye"></i>
+                        </button>
                     </div>
+                    {% if form.password.errors %}
+                        <div class="text-danger fs-xs mt-1">{{ form.password.errors }}</div>
+                    {% endif %}
+                </div>
                 {% endif %}
 
+                <!-- Password 2 -->
                 {% if form.password2 %}
-                    <div class="form-group-modern">
-                        <label for="{{ form.password2.id_for_label }}">
-                            <i class="bi bi-lock-check"></i> Confirm Password
-                        </label>
-                        {{ form.password2 }}
-                        {{ form.password2.errors }}
+                <div class="auth-input-group">
+                    <label class="auth-input-label" for="{{ form.password2.id_for_label }}">Confirm Password</label>
+                    <div class="auth-input-wrapper">
+                        <i class="bi bi-shield-lock auth-input-icon"></i>
+                        <input type="password" name="password2" id="{{ form.password2.id_for_label }}" class="auth-input" placeholder="Repeat your password" required autocomplete="new-password">
+                        <button type="button" class="password-toggle-btn" data-target="{{ form.password2.id_for_label }}">
+                            <i class="bi bi-eye"></i>
+                        </button>
                     </div>
+                    {% if form.password2.errors %}
+                        <div class="text-danger fs-xs mt-1">{{ form.password2.errors }}</div>
+                    {% endif %}
+                </div>
                 {% endif %}
 
+                <!-- Any extra fields -->
                 {% for field in form %}
                     {% if field.name not in "first_name,last_name,username,email,password,password1,password2" %}
-                        <div class="form-group-modern">
-                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                            {{ field }}
-                            {{ field.errors }}
+                        <div class="auth-input-group">
+                            <label class="auth-input-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            <div class="auth-input-wrapper">
+                                {{ field }}
+                            </div>
+                            {% if field.errors %}<div class="text-danger fs-xs mt-1">{{ field.errors }}</div>{% endif %}
                         </div>
                     {% endif %}
                 {% endfor %}
 
-                <button type="submit" class="btn-register">
-                    <i class="bi bi-person-plus-fill"></i>
-                    Create Account
+                <button type="submit" class="auth-submit-btn mt-3">
+                    <i class="bi bi-person-check-fill"></i>
+                    <span>Create Free Account</span>
                 </button>
             </form>
 
-            <div class="auth-footer">
-                <p class="auth-footer-text">
-                    Already have an account?
-                    <a href="{% url 'login' %}" class="auth-footer-link">Sign in →</a>
-                </p>
+            <div class="auth-switch-footer">
+                <span>Already registered?</span>
+                <a href="{% url 'login' %}" class="auth-switch-link">Sign in here &rarr;</a>
             </div>
-
         </div>
     </div>
 </div>
 {% endblock content %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.password-toggle-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-target');
+            const targetInput = targetId ? document.getElementById(targetId) : btn.previousElementSibling;
+            const icon = btn.querySelector('i');
+            
+            if (targetInput && icon) {
+                const isPassword = targetInput.type === 'password';
+                targetInput.type = isPassword ? 'text' : 'password';
+                icon.className = isPassword ? 'bi bi-eye-slash' : 'bi bi-eye';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

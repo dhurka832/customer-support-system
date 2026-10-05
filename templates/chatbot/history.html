@@ -1,39 +1,55 @@
 {% extends 'base.html' %}
+{% block title %}Chat Conversation History | SupportSphere{% endblock %}
+
 {% block content %}
-<div class="mb-4">
-    <h2 class="fw-bold mb-1">Chat History</h2>
-    <p class="text-muted small mb-0">Review all your legacy question-and-answer exchanges with the support assistant.</p>
+<div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+    <div>
+        <h2 class="mb-1">Chat Dialogue History</h2>
+        <p class="text-muted small m-0">Review past question-and-answer exchanges with the AI support assistant.</p>
+    </div>
+    <a href="{% url 'chatbot' %}" class="btn btn-primary">
+        <i class="bi bi-chat-dots-fill"></i> Return to Live Chat
+    </a>
 </div>
 
-<div class="row g-3">
+<div class="grid grid-1 gap-3">
     {% for chat in chats %}
-        <div class="col-12">
-            <div class="card card-modern p-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill"><i class="bi bi-clock me-1"></i>Exchange #{{ forloop.revindex }}</span>
-                    <small class="text-muted">{{ chat.created_at|date:"M d, Y H:i" }}</small>
+        <div class="card-modern p-4 animate-slide-up">
+            <div class="flex items-center justify-between mb-3 border-bottom pb-2" style="border-color: var(--border-subtle);">
+                <span class="badge badge-primary">
+                    <i class="bi bi-clock-history me-1"></i> Exchange #{{ forloop.revindex }}
+                </span>
+                <span class="text-muted fs-xs">{{ chat.created_at|date:"M d, Y • H:i" }}</span>
+            </div>
+            
+            <div class="mb-3">
+                <strong class="text-dark fs-xs text-uppercase d-block mb-1">
+                    <i class="bi bi-person-fill text-primary me-1"></i> You Asked:
+                </strong>
+                <div class="p-3 text-dark small" style="background: var(--slate-50); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); white-space: pre-line;">
+                    {{ chat.question }}
                 </div>
-                
-                <div class="mb-3">
-                    <strong class="text-dark small d-block mb-1"><i class="bi bi-person-fill text-muted me-1"></i>You asked:</strong>
-                    <div class="p-3 bg-light rounded text-muted small" style="white-space: pre-line;">{{ chat.question }}</div>
-                </div>
-                
-                <div>
-                    <strong class="text-dark small d-block mb-1"><i class="bi bi-cpu-fill text-primary me-1"></i>AI responded:</strong>
-                    <div class="p-3 bg-light rounded text-muted small" style="white-space: pre-line;">{{ chat.answer }}</div>
+            </div>
+            
+            <div>
+                <strong class="text-primary fs-xs text-uppercase d-block mb-1">
+                    <i class="bi bi-robot text-primary me-1"></i> AI Assistant Response:
+                </strong>
+                <div class="p-3 text-dark small" style="background: #ffffff; border-radius: var(--radius-sm); border: 1.5px solid var(--border-subtle); line-height: 1.6; white-space: pre-line;">
+                    {{ chat.answer }}
                 </div>
             </div>
         </div>
     {% empty %}
-        <div class="col-12">
-            <div class="card card-modern text-center py-5">
-                <div class="card-body">
-                    <i class="bi bi-clock-history text-muted opacity-50 mb-3" style="font-size: 3rem;"></i>
-                    <h4 class="fw-bold mb-2">No history logged</h4>
-                    <p class="text-muted small mb-0">Ask questions in the AI Chat portal to populate this log.</p>
-                </div>
-            </div>
+        <div class="card-modern text-center py-5">
+            <i class="bi bi-clock-history fs-1 mb-3 text-muted d-block" style="opacity: 0.35;"></i>
+            <h3 class="mb-1">No Chat History Logged</h3>
+            <p class="text-muted small mb-4" style="max-width: 420px; margin-left: auto; margin-right: auto;">
+                You haven't initiated any inquiries with the AI chatbot yet. Start a session in the AI chat portal to test it.
+            </p>
+            <a href="{% url 'chatbot' %}" class="btn btn-primary">
+                <i class="bi bi-chat-dots-fill"></i> Start AI Conversation
+            </a>
         </div>
     {% endfor %}
 </div>

@@ -2,142 +2,203 @@
 
 {% block extra_css %}
 {% load static %}
-<link href="{% static 'css/auth.css' %}?v=2.1" rel="stylesheet">
+<link href="{% static 'css/auth.css' %}?v=4.2.0" rel="stylesheet">
 <style>
-  .navbar-modern { display: none !important; }
-  html, body {
-      background: #0f0f1a !important;
+  .navbar-modern, footer { display: none !important; }
+  body {
+      background-color: #0c1017 !important;
       margin: 0;
       padding: 0;
-      min-height: 100%;
+      min-height: 100vh;
   }
 </style>
 {% endblock extra_css %}
 
 {% block content %}
-<div class="auth-page-wrapper">
+<div class="auth-viewport">
+    <div class="auth-grid-overlay"></div>
 
-    <div class="auth-branding">
-        <div class="auth-branding-grid"></div>
-        <div class="orb-accent"></div>
-        <div class="auth-branding-content">
+    <div class="auth-master-card">
+        <!-- Left Showcase Panel -->
+        <div class="auth-showcase-panel">
+            <div>
+                <a href="/" class="auth-brand-badge">
+                    <div class="auth-brand-icon">
+                        <i class="bi bi-cpu-fill"></i>
+                    </div>
+                    <span class="auth-brand-name">SupportSphere</span>
+                </a>
 
-            <div class="auth-logo">
-                <div class="auth-logo-icon">
-                    <i class="bi bi-cpu-fill"></i>
+                <h1 class="auth-headline">
+                    Intelligent customer operations, <span class="auth-headline-accent">simplified.</span>
+                </h1>
+
+                <p class="auth-description">
+                    Manage support tickets, track resolutions, and provide fast assistance backed by our dedicated knowledge index.
+                </p>
+
+                <!-- Live Performance Card -->
+                <div class="auth-widget-card">
+                    <div class="auth-widget-header">
+                        <span class="auth-widget-title">
+                            <i class="bi bi-activity me-1"></i> Operations Metrics
+                        </span>
+                        <span class="badge badge-closed" style="font-size: 0.7rem; padding: 0.15rem 0.5rem;">
+                            <span class="badge-pulse-dot success"></span> Online
+                        </span>
+                    </div>
+
+                    <div class="auth-widget-stats">
+                        <div class="auth-stat-box">
+                            <div class="auth-stat-val text-primary">&lt; 30s</div>
+                            <div class="auth-stat-lbl">Average First Response</div>
+                        </div>
+                        <div class="auth-stat-box">
+                            <div class="auth-stat-val text-success">99.4%</div>
+                            <div class="auth-stat-lbl">Resolution Rate</div>
+                        </div>
+                    </div>
                 </div>
-                <span class="auth-logo-text">SupportSphere</span>
             </div>
 
-            <h2 class="auth-brand-headline">
-                AI-powered<br>support <span class="gradient-word">reimagined</span>
-            </h2>
-
-            <p class="auth-brand-sub">
-                Resolve customer queries instantly with intelligent automation, real-time chat, and a full-featured ticket management system.
-            </p>
-
-            <div class="auth-feature-list">
-                <div class="auth-feature-item">
-                    <div class="auth-feature-dot indigo">
-                        <i class="bi bi-robot"></i>
-                    </div>
-                    <span class="auth-feature-label">RAG-powered AI chatbot with Llama 3</span>
-                </div>
-                <div class="auth-feature-item">
-                    <div class="auth-feature-dot violet">
-                        <i class="bi bi-ticket-perforated"></i>
-                    </div>
-                    <span class="auth-feature-label">Smart ticket management & live status</span>
-                </div>
-                <div class="auth-feature-item">
-                    <div class="auth-feature-dot emerald">
-                        <i class="bi bi-bar-chart-fill"></i>
-                    </div>
-                    <span class="auth-feature-label">Admin analytics & conversation insights</span>
-                </div>
+            <div class="auth-showcase-footer">
+                <i class="bi bi-shield-check text-success"></i>
+                <span>Enterprise End-to-End Encrypted Session</span>
             </div>
         </div>
-    </div>
 
-    <div class="auth-form-panel">
-        <div class="auth-form-inner">
-
+        <!-- Right Form Panel -->
+        <div class="auth-form-panel">
             <div class="auth-form-header">
-                <div class="auth-form-badge">
-                    <i class="bi bi-shield-lock-fill"></i> Secure Login
+                <span class="auth-form-tag">
+                    <i class="bi bi-lock-fill"></i> Secure Sign In
+                </span>
+                <h2 class="auth-form-title">Welcome back</h2>
+                <p class="auth-form-subtitle">Enter your credentials to access the support portal</p>
+            </div>
+
+            <!-- Demo Access Pill Card -->
+            <div class="demo-access-card">
+                <div class="demo-access-info">
+                    <i class="bi bi-lightning-charge-fill text-warning"></i>
+                    <span>Demo Account: <strong>Dhurka</strong></span>
                 </div>
-                <h1 class="auth-form-title">Welcome back</h1>
-                <p class="auth-form-subtitle">Sign in to your SupportSphere account</p>
+                <button type="button" class="demo-autofill-btn" id="demoFillBtn" data-user="Dhurka" data-pass="Dhurka@345">
+                    <span>Auto-Fill</span>
+                    <i class="bi bi-arrow-right-short"></i>
+                </button>
             </div>
 
             <form method="post" id="loginForm">
                 {% csrf_token %}
 
                 {% if form.non_field_errors %}
-                    <div class="auth-error-box">
+                    <div class="auth-alert-error">
                         {% for error in form.non_field_errors %}
-                            <p><i class="bi bi-exclamation-circle"></i> {{ error }}</p>
+                            <div class="flex items-center gap-2">
+                                <i class="bi bi-exclamation-circle-fill"></i>
+                                <span>{{ error }}</span>
+                            </div>
                         {% endfor %}
                     </div>
                 {% endif %}
 
-                <div class="form-group-modern">
-                    {% if form.username %}
-                        <label for="{{ form.username.id_for_label }}">
-                            <i class="bi bi-person"></i> Username
-                        </label>
-                        {{ form.username }}
-                        {{ form.username.errors }}
-                    {% endif %}
-                </div>
-
-                <div class="form-group-modern">
-                    {% if form.password %}
-                        <label for="{{ form.password.id_for_label }}">
-                            <i class="bi bi-lock"></i> Password
-                        </label>
-                        {{ form.password }}
-                        {{ form.password.errors }}
-                    {% endif %}
-                </div>
-
-                {% for field in form %}
-                    {% if field.name != 'username' and field.name != 'password' %}
-                        <div class="form-group-modern">
-                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                            {{ field }}
-                            {{ field.errors }}
-                        </div>
-                    {% endif %}
-                {% endfor %}
-
-                <div class="form-check-modern">
-                    <div>
-                        <input type="checkbox" id="remember" name="remember">
-                        <label for="remember">Remember me</label>
+                <!-- Username Input -->
+                <div class="auth-input-group">
+                    <label class="auth-input-label" for="id_username">
+                        <span>Username</span>
+                    </label>
+                    <div class="auth-input-wrapper">
+                        <i class="bi bi-person auth-input-icon"></i>
+                        <input type="text" name="username" id="id_username" class="auth-input" placeholder="Enter your username" required autofocus autocomplete="username">
                     </div>
-                    <a href="#" class="forgot-password-link">Forgot password?</a>
+                    {% if form.username.errors %}
+                        <div class="text-danger fs-xs mt-1">{{ form.username.errors }}</div>
+                    {% endif %}
                 </div>
 
-                <button type="submit" class="btn-login">
-                    <i class="bi bi-box-arrow-in-right"></i>
-                    Sign In
+                <!-- Password Input -->
+                <div class="auth-input-group">
+                    <label class="auth-input-label" for="id_password">
+                        <span>Password</span>
+                    </label>
+                    <div class="auth-input-wrapper">
+                        <i class="bi bi-key auth-input-icon"></i>
+                        <input type="password" name="password" id="id_password" class="auth-input" placeholder="Enter your password" required autocomplete="current-password">
+                        <button type="button" class="password-toggle-btn" id="togglePasswordBtn" aria-label="Toggle password visibility">
+                            <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                        </button>
+                    </div>
+                    {% if form.password.errors %}
+                        <div class="text-danger fs-xs mt-1">{{ form.password.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Remember & Forgot Options -->
+                <div class="auth-options-row">
+                    <label class="auth-remember">
+                        <input type="checkbox" name="remember" id="remember">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="text-primary fs-xs fw-semibold">Forgot password?</a>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="auth-submit-btn">
+                    <span>Sign In to Dashboard</span>
+                    <i class="bi bi-arrow-right"></i>
                 </button>
             </form>
 
-            <div class="auth-footer">
-                <p class="auth-footer-text">
-                    Don't have an account?
-                    <a href="{% url 'register' %}" class="auth-footer-link">Create one free →</a>
-                </p>
+            <div class="auth-switch-footer">
+                <span>Don't have an account?</span>
+                <a href="{% url 'register' %}" class="auth-switch-link">Create account &rarr;</a>
             </div>
-
-            <div class="mt-3 text-center text-muted small">
-                Demo Credentials - <strong>Dhurka</strong> | <strong>Dhurka@345</strong> <br>
-            </div>
-
         </div>
     </div>
 </div>
 {% endblock content %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Password visibility toggle
+    const toggleBtn = document.getElementById('togglePasswordBtn');
+    const passwordInput = document.getElementById('id_password');
+    const toggleIcon = document.getElementById('togglePasswordIcon');
+
+    if (toggleBtn && passwordInput && toggleIcon) {
+        toggleBtn.addEventListener('click', () => {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            toggleIcon.className = isPassword ? 'bi bi-eye-slash' : 'bi bi-eye';
+        });
+    }
+
+    // Demo credentials autofill
+    const demoBtn = document.getElementById('demoFillBtn');
+    const userInput = document.getElementById('id_username');
+
+    if (demoBtn && userInput && passwordInput) {
+        demoBtn.addEventListener('click', () => {
+            const user = demoBtn.getAttribute('data-user');
+            const pass = demoBtn.getAttribute('data-pass');
+            
+            userInput.value = user;
+            passwordInput.value = pass;
+            
+            userInput.style.borderColor = 'var(--primary-500)';
+            passwordInput.style.borderColor = 'var(--primary-500)';
+            setTimeout(() => {
+                userInput.style.borderColor = '';
+                passwordInput.style.borderColor = '';
+            }, 600);
+
+            const originalText = demoBtn.innerHTML;
+            demoBtn.innerHTML = `<i class="bi bi-check2 text-success"></i> <span class="text-success">Ready!</span>`;
+            setTimeout(() => { demoBtn.innerHTML = originalText; }, 1200);
+        });
+    }
+});
+</script>
+{% endblock %}

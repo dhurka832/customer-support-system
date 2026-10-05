@@ -1,57 +1,55 @@
 {% if page_obj.has_other_pages %}
-<div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
-    <span class="text-muted small">
-        Showing Page <strong>{{ page_obj.number }}</strong> of {{ page_obj.paginator.num_pages }}
+<div class="flex items-center justify-between flex-wrap gap-3">
+    <span class="text-muted fs-xs">
+        Page <strong class="text-dark">{{ page_obj.number }}</strong> of {{ page_obj.paginator.num_pages }}
         (Total items: {{ page_obj.paginator.count }})
     </span>
     
     <nav aria-label="Page navigation">
-        <ul class="pagination pagination-sm mb-0">
-            
+        <ul class="pagination-modern">
             {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page=1" aria-label="First">
-                    <span aria-hidden="true">&laquo;&laquo; First</span>
+            <li class="page-item-modern">
+                <a class="page-link-modern" href="?page=1{% if search_query %}&q={{ search_query }}{% elif search %}&search={{ search }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if priority_filter %}&priority={{ priority_filter }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}{% if current_dir %}&dir={{ current_dir }}{% endif %}{% if date_filter %}&date_filter={{ date_filter }}{% endif %}" title="First Page">
+                    &laquo;&laquo;
                 </a>
             </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo; Prev</span>
+            <li class="page-item-modern">
+                <a class="page-link-modern" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% elif search %}&search={{ search }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if priority_filter %}&priority={{ priority_filter }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}{% if current_dir %}&dir={{ current_dir }}{% endif %}{% if date_filter %}&date_filter={{ date_filter }}{% endif %}" title="Previous Page">
+                    &laquo; Prev
                 </a>
             </li>
             {% else %}
-            <li class="page-item disabled"><span class="page-link">&laquo;&laquo; First</span></li>
-            <li class="page-item disabled"><span class="page-link">&laquo; Prev</span></li>
+            <li class="page-item-modern disabled"><span class="page-link-modern">&laquo;&laquo;</span></li>
+            <li class="page-item-modern disabled"><span class="page-link-modern">&laquo; Prev</span></li>
             {% endif %}
 
             {% for num in page_obj.paginator.page_range %}
                 {% if page_obj.number == num %}
-                <li class="page-item active" aria-current="page">
-                    <span class="page-link fw-bold">{{ num }}</span>
+                <li class="page-item-modern active" aria-current="page">
+                    <span class="page-link-modern">{{ num }}</span>
                 </li>
                 {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                <li class="page-item-modern">
+                    <a class="page-link-modern" href="?page={{ num }}{% if search_query %}&q={{ search_query }}{% elif search %}&search={{ search }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if priority_filter %}&priority={{ priority_filter }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}{% if current_dir %}&dir={{ current_dir }}{% endif %}{% if date_filter %}&date_filter={{ date_filter }}{% endif %}">{{ num }}</a>
                 </li>
                 {% endif %}
             {% endfor %}
 
             {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
-                    <span aria-hidden="true">Next &raquo;</span>
+            <li class="page-item-modern">
+                <a class="page-link-modern" href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% elif search %}&search={{ search }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if priority_filter %}&priority={{ priority_filter }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}{% if current_dir %}&dir={{ current_dir }}{% endif %}{% if date_filter %}&date_filter={{ date_filter }}{% endif %}" title="Next Page">
+                    Next &raquo;
                 </a>
             </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
-                    <span aria-hidden="true">Last &raquo;&raquo;</span>
+            <li class="page-item-modern">
+                <a class="page-link-modern" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&q={{ search_query }}{% elif search %}&search={{ search }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if priority_filter %}&priority={{ priority_filter }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}{% if current_dir %}&dir={{ current_dir }}{% endif %}{% if date_filter %}&date_filter={{ date_filter }}{% endif %}" title="Last Page">
+                    &raquo;&raquo;
                 </a>
             </li>
             {% else %}
-            <li class="page-item disabled"><span class="page-link">Next &raquo;</span></li>
-            <li class="page-item disabled"><span class="page-link">Last &raquo;&raquo;</span></li>
+            <li class="page-item-modern disabled"><span class="page-link-modern">Next &raquo;</span></li>
+            <li class="page-item-modern disabled"><span class="page-link-modern">&raquo;&raquo;</span></li>
             {% endif %}
-            
         </ul>
     </nav>
 </div>

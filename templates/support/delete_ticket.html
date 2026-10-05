@@ -1,13 +1,31 @@
 {% extends "base.html" %}
+{% block title %}Delete Ticket | SupportSphere{% endblock %}
 
 {% block content %}
- <div class="card p-4">
-   <h2>Delete Ticket</h2>
-   <p>Are you sure you want to delete <strong>{{ticket.title}}</strong>?<p>
-   <form method="post">
-      {% csrf_token %}
-      <button class="btn btn-danger">Delete Ticket</button>
-      <a href="{% url 'ticket-list' %}" class="btn btn-secondary">Cancel</a>
-   </form>
- </div>
+<div class="flex justify-center">
+    <div style="width: 100%; max-width: 520px;">
+        <div class="card-modern p-5 text-center animate-slide-up">
+            <div class="rounded-circle mx-auto mb-3" style="width: 68px; height: 68px; background: rgba(244, 63, 94, 0.12); color: var(--accent-rose); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 14px rgba(244, 63, 94, 0.2);">
+                <i class="bi bi-trash3-fill"></i>
+            </div>
+            
+            <h2 class="mb-2">Delete Ticket</h2>
+            <p class="text-muted small mb-4">
+                Are you sure you want to permanently delete ticket <strong>"{{ ticket.title }}"</strong>? This action will remove the entire conversation thread and cannot be undone.
+            </p>
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="flex flex-col gap-2">
+                    <button type="submit" class="btn btn-danger w-100">
+                        <i class="bi bi-trash-fill"></i> Yes, Delete Ticket
+                    </button>
+                    <a href="{% url 'ticket-list' %}" class="btn btn-secondary w-100">
+                        Cancel &amp; Return
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

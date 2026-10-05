@@ -1,156 +1,161 @@
 {% extends 'dashboard/base.html' %}
 {% load static %}
 
-{% block title %}Manage Customers | AI Support{% endblock %}
+{% block title %}Customer Directory | SupportSphere Admin{% endblock %}
 
 {% block content %}
 <div class="container-fluid py-4 px-4">
-    <div class="row align-items-center mb-4 g-3">
-        <div class="col-12 col-md-6">
-            <h1 class="h3 mb-0 text-dark fw-bold">Customer Directory</h1>
-            <p class="text-muted mb-0">Overview of all system users and support activity.</p>
+    <!-- Header & Search -->
+    <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+        <div>
+            <h1 class="mb-1">Customer Directory</h1>
+            <p class="text-muted small m-0">View registered user accounts, their AI conversation volume, and tickets history.</p>
         </div>
-        <div class="col-12 col-md-6">
-            <form method="GET" action="" class="d-flex justify-content-md-end">
+        <div>
+            <form method="GET" action="" class="flex items-center gap-2">
                 {% if current_sort %}<input type="hidden" name="sort" value="{{ current_sort }}">{% endif %}
                 {% if current_dir %}<input type="hidden" name="dir" value="{{ current_dir }}">{% endif %}
                 
                 <div class="input-group" style="max-width: 360px;">
-                    <input type="text" name="search" class="form-control" placeholder="Search by username or email..." value="{{ search_query }}">
+                    <input type="text" name="search" class="form-control" placeholder="Search username or email..." value="{{ search_query }}">
                     <button class="btn btn-primary" type="submit">
                         <i class="bi bi-search"></i>
                     </button>
                     {% if search_query %}
-                    <a href="?sort={{ current_sort }}&dir={{ current_dir }}" class="btn btn-outline-secondary">Clear</a>
+                    <a href="?sort={{ current_sort }}&dir={{ current_dir }}" class="btn btn-secondary">Clear</a>
                     {% endif %}
                 </div>
             </form>
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th scope="col" class="ps-4">
-                                <a href="?sort=name&dir={% if current_sort == 'name' and current_dir == 'asc' %}desc{% else %}asc{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" class="text-decoration-none text-dark">
-                                    Name {% if current_sort == 'name' %}{% if current_dir == 'asc' %}▲{% else %}▼{% endif %}{% endif %}
-                                </a>
-                            </th>
-                            <th scope="col">
-                                <a href="?sort=email&dir={% if current_sort == 'email' and current_dir == 'asc' %}desc{% else %}asc{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" class="text-decoration-none text-dark">
-                                    Email {% if current_sort == 'email' %}{% if current_dir == 'asc' %}▲{% else %}▼{% endif %}{% endif %}
-                                </a>
-                            </th>
-                            <th scope="col">
-                                <a href="?sort=date_joined&dir={% if current_sort == 'date_joined' and current_dir == 'asc' %}desc{% else %}asc{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" class="text-decoration-none text-dark">
-                                    Registration Date {% if current_sort == 'date_joined' %}{% if current_dir == 'asc' %}▲{% else %}▼{% endif %}{% endif %}
-                                </a>
-                            </th>
-                            <th scope="col" class="text-center">
-                                <a href="?sort=conversations&dir={% if current_sort == 'conversations' and current_dir == 'asc' %}desc{% else %}asc{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" class="text-decoration-none text-dark">
-                                    Total Conversations {% if current_sort == 'conversations' %}{% if current_dir == 'asc' %}▲{% else %}▼{% endif %}{% endif %}
-                                </a>
-                            </th>
-                            <th scope="col" class="text-center">
-                                <a href="?sort=messages&dir={% if current_sort == 'messages' and current_dir == 'asc' %}desc{% else %}asc{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" class="text-decoration-none text-dark">
-                                    Total Messages {% if current_sort == 'messages' %}{% if current_dir == 'asc' %}▲{% else %}▼{% endif %}{% endif %}
-                                </a>
-                            </th>
-                            <th scope="col" class="text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for customer in page_obj %}
-                        <tr>
-                            <td class="ps-4">
-                                <div class="d-flex align-items-center">
-                                    <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; font-weight: 600;">
-                                        {{ customer.username|slice:":2"|upper }}
-                                    </div>
-                                    <div>
-                                        <div class="font-weight-bold text-dark mb-0">
-                                            <a href="{% url 'admin_customer_detail' customer.id %}" class="text-decoration-none text-dark fw-bold">
-                                                {% if customer.get_full_name %}{{ customer.get_full_name }}{% else %}{{ customer.username }}{% endif %}
-                                            </a>
-                                        </div>
-                                        <small class="text-muted">Username: {{ customer.username }}</small>
-                                    </div>
+    <!-- Data Card Table -->
+    <div class="data-card-table-wrapper mb-4">
+        <div class="table-responsive-container">
+            <table class="data-table-modern">
+                <thead>
+                    <tr>
+                        <th style="min-width: 240px;">
+                            <a href="?sort=name&dir={% if current_sort == 'name' and current_dir == 'asc' %}desc{% else %}asc{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                                Customer Name {% if current_sort == 'name' %}{% if current_dir == 'asc' %}<i class="bi bi-arrow-up text-primary"></i>{% else %}<i class="bi bi-arrow-down text-primary"></i>{% endif %}{% endif %}
+                            </a>
+                        </th>
+                        <th>
+                            <a href="?sort=email&dir={% if current_sort == 'email' and current_dir == 'asc' %}desc{% else %}asc{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                                Email Address {% if current_sort == 'email' %}{% if current_dir == 'asc' %}<i class="bi bi-arrow-up text-primary"></i>{% else %}<i class="bi bi-arrow-down text-primary"></i>{% endif %}{% endif %}
+                            </a>
+                        </th>
+                        <th>
+                            <a href="?sort=date_joined&dir={% if current_sort == 'date_joined' and current_dir == 'asc' %}desc{% else %}asc{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                                Registration Date {% if current_sort == 'date_joined' %}{% if current_dir == 'asc' %}<i class="bi bi-arrow-up text-primary"></i>{% else %}<i class="bi bi-arrow-down text-primary"></i>{% endif %}{% endif %}
+                            </a>
+                        </th>
+                        <th class="text-center">
+                            <a href="?sort=conversations&dir={% if current_sort == 'conversations' and current_dir == 'asc' %}desc{% else %}asc{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                                Total Chats {% if current_sort == 'conversations' %}{% if current_dir == 'asc' %}<i class="bi bi-arrow-up text-primary"></i>{% else %}<i class="bi bi-arrow-down text-primary"></i>{% endif %}{% endif %}
+                            </a>
+                        </th>
+                        <th class="text-center">
+                            <a href="?sort=messages&dir={% if current_sort == 'messages' and current_dir == 'asc' %}desc{% else %}asc{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                                Total Messages {% if current_sort == 'messages' %}{% if current_dir == 'asc' %}<i class="bi bi-arrow-up text-primary"></i>{% else %}<i class="bi bi-arrow-down text-primary"></i>{% endif %}{% endif %}
+                            </a>
+                        </th>
+                        <th class="text-end" style="min-width: 180px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for customer in page_obj %}
+                    <tr>
+                        <td>
+                            <div class="flex items-center gap-3">
+                                <div class="avatar-circle">
+                                    {{ customer.username|slice:":2"|upper }}
                                 </div>
-                            </td>
-                            <td>{{ customer.email }}</td>
-                            <td>{{ customer.date_joined|date:"M d, Y" }}</td>
-                            <td class="text-center">
-                                <span class="badge rounded-pill bg-light text-dark border px-3 py-2">
-                                    {{ customer.total_conversations }}
-                                </span>
-                            </td>
-                            <td class="text-center">
-                                <span class="badge rounded-pill bg-light text-dark border px-3 py-2">
-                                    {{ customer.total_messages }}
-                                </span>
-                            </td>
-                            <td class="text-center">
-                                <div class="btn-group gap-2">
-                                    <a href="{% url 'admin_customer_detail' customer.id %}" class="btn btn-sm btn-outline-primary rounded-2">
-                                        <i class="bi bi-chat-left-text me-1"></i> View Chats
+                                <div>
+                                    <a href="{% url 'admin_customer_detail' customer.id %}" class="fw-bold text-dark fs-sm d-block">
+                                        {% if customer.get_full_name %}{{ customer.get_full_name }}{% else %}{{ customer.username }}{% endif %}
                                     </a>
-                                    <button class="btn btn-sm btn-outline-danger rounded-2 btn-delete-customer" 
-                                            data-user-id="{{ customer.id }}" 
-                                            data-username="{{ customer.username }}"
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#deleteConfirmModal">
-                                        <i class="bi bi-trash-fill"></i> Delete
-                                    </button>
+                                    <span class="text-muted fs-xs">@{{ customer.username }}</span>
                                 </div>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="6" class="text-center py-5 text-muted">
-                                <i class="bi bi-people fs-1 mb-3 text-muted opacity-50 d-block"></i>
-                                <div>No customers found matching the search criteria.</div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="text-muted fs-sm">{{ customer.email|default:"No email registered" }}</span>
+                        </td>
+                        <td>
+                            <span class="text-muted fs-sm">{{ customer.date_joined|date:"M d, Y" }}</span>
+                        </td>
+                        <td class="text-center">
+                            <span class="badge badge-primary" style="font-size: 0.8rem;">
+                                <i class="bi bi-chat-left-text"></i> {{ customer.total_conversations }}
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <span class="badge badge-closed" style="font-size: 0.8rem;">
+                                <i class="bi bi-chat-dots"></i> {{ customer.total_messages }}
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="{% url 'admin_customer_detail' customer.id %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-chat-left-text"></i> Logs
+                                </a>
+                                <button type="button" class="btn btn-sm btn-outline-danger btn-delete-customer" 
+                                        data-user-id="{{ customer.id }}" 
+                                        data-username="{{ customer.username }}"
+                                        data-toggle="modal" 
+                                        data-target="#deleteConfirmModal">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <i class="bi bi-people fs-1 d-block mb-3" style="opacity: 0.35;"></i>
+                            <div class="fw-bold fs-sm">No customers found</div>
+                            <span class="fs-xs">No user accounts match your search query.</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
         
-        <div class="card-footer bg-white border-0 py-3">
+        <div class="p-3 border-top" style="border-color: var(--border-subtle); background: #ffffff;">
             {% include "components/pagination.html" with page_obj=page_obj %}
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title fw-bold" id="deleteConfirmModalLabel"><i class="bi bi-exclamation-triangle-fill me-2"></i>Confirm Deletion</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- Pure CSS / Vanilla JS Modal for Deletion -->
+<div class="modal" id="deleteConfirmModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-header danger-header">
+            <h5 class="modal-title text-white"><i class="bi bi-exclamation-triangle-fill me-2"></i>Delete Customer Account</h5>
+            <button type="button" class="btn-close text-white" data-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center p-4">
+            <div class="rounded-circle mx-auto mb-3" style="width: 56px; height: 56px; background: rgba(244, 63, 94, 0.12); color: var(--accent-rose); display: flex; align-items: center; justify-content: center; font-size: 1.6rem;">
+                <i class="bi bi-person-x-fill"></i>
             </div>
-            <div class="modal-body p-4 text-center">
-                <p class="mb-3">Are you sure you want to delete customer <strong id="deleteModalUsername"></strong>?</p>
-                <div class="alert alert-warning text-start small mb-0">
-                    <i class="bi bi-info-circle-fill me-1"></i> <strong>Warning:</strong> Deleting this customer will permanently erase all associated chat conversations, tickets, and data. This action is irreversible.
-                </div>
+            <p class="mb-3 text-dark">Are you sure you want to permanently delete customer account <strong id="deleteModalUsername" class="text-danger"></strong>?</p>
+            <div class="p-3 text-start small mb-0" style="background: rgba(245, 158, 11, 0.1); border-left: 3px solid var(--accent-amber); border-radius: var(--radius-sm); color: #92400e;">
+                <i class="bi bi-info-circle-fill me-1"></i> <strong>Irreversible Action:</strong> Deleting this customer will permanently delete all associated conversation logs, tickets, and user profile data.
             </div>
-            <div class="modal-footer bg-light border-0">
-                <form id="deleteCustomerForm" method="POST" action="">
-                    {% csrf_token %}
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger"><i class="bi bi-trash-fill me-1"></i>Delete Customer</button>
-                </form>
-            </div>
+        </div>
+        <div class="modal-footer">
+            <form id="deleteCustomerForm" method="POST" action="" class="flex items-center gap-2">
+                {% csrf_token %}
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-danger"><i class="bi bi-trash-fill"></i> Confirm Deletion</button>
+            </form>
         </div>
     </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/customers.js' %}"></script>
+<script src="{% static 'js/customers.js' %}?v=4.0.0"></script>
 {% endblock %}

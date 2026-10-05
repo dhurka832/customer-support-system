@@ -1,215 +1,261 @@
 {% extends 'dashboard/base.html' %}
 {% load static %}
 
-{% block title %}Support Tickets | AI Support{% endblock %}
+{% block title %}Support Tickets Directory | SupportSphere Admin{% endblock %}
 
 {% block content %}
 <div class="container-fluid py-4 px-4">
-
-    <div class="row align-items-center mb-4 g-3">
-        <div class="col-12 col-md-6">
-            <h1 class="h3 mb-1 text-dark fw-bold">Support Tickets</h1>
-            <p class="text-muted mb-0">All tickets submitted by customers across the system.</p>
+    <!-- Header & Search -->
+    <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+        <div>
+            <h1 class="mb-1">Customer Support Tickets</h1>
+            <p class="text-muted small m-0">Review, prioritize, and reply to all customer inquiries across the system.</p>
         </div>
-        <div class="col-12 col-md-6">
-            <form method="GET" action="" class="d-flex justify-content-md-end">
+        <div>
+            <form method="GET" action="" class="flex items-center gap-2">
                 {% if status_filter and status_filter != 'all' %}<input type="hidden" name="status" value="{{ status_filter }}">{% endif %}
                 {% if priority_filter and priority_filter != 'all' %}<input type="hidden" name="priority" value="{{ priority_filter }}">{% endif %}
-                <div class="input-group" style="max-width: 380px;">
-                    <input type="text" name="q" class="form-control" placeholder="Search title, customer, email..." value="{{ search_query }}">
-                    <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
+                <div class="input-group" style="max-width: 360px;">
+                    <input type="text" name="q" class="form-control" placeholder="Search subject, customer, email..." value="{{ search_query }}">
+                    <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
                     {% if search_query %}
-                    <a href="?status={{ status_filter }}&priority={{ priority_filter }}" class="btn btn-outline-secondary">Clear</a>
+                    <a href="?status={{ status_filter }}&priority={{ priority_filter }}" class="btn btn-secondary">Clear</a>
                     {% endif %}
                 </div>
             </form>
         </div>
     </div>
 
-    <div class="row g-3 mb-4">
-        <div class="col-6 col-sm-3">
-            <div class="card border-0 shadow-sm text-center py-3">
-                <div class="card-body p-2">
-                    <div class="fs-3 fw-bold text-dark">{{ total_count }}</div>
-                    <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.7rem; letter-spacing: 0.05rem;">Total</small>
+    <!-- Bento Metric Cards for Tickets -->
+    <div class="grid grid-4 gap-3 mb-4">
+        <div class="bento-stat-card accent-indigo">
+            <div class="flex items-center justify-between mb-1">
+                <span class="fs-xs fw-bold text-muted text-uppercase">Total Tickets</span>
+                <div class="stat-icon-wrapper indigo">
+                    <i class="bi bi-ticket-detailed-fill"></i>
                 </div>
             </div>
+            <div class="bento-stat-number">{{ total_count }}</div>
+            <span class="text-muted fs-xs">System-wide submissions</span>
         </div>
-        <div class="col-6 col-sm-3">
-            <div class="card border-0 shadow-sm text-center py-3 border-start border-danger border-3">
-                <div class="card-body p-2">
-                    <div class="fs-3 fw-bold text-danger">{{ open_count }}</div>
-                    <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.7rem; letter-spacing: 0.05rem;">Open</small>
+
+        <div class="bento-stat-card accent-rose">
+            <div class="flex items-center justify-between mb-1">
+                <span class="fs-xs fw-bold text-danger text-uppercase">Open (Action Needed)</span>
+                <div class="stat-icon-wrapper rose">
+                    <i class="bi bi-exclamation-circle-fill"></i>
                 </div>
             </div>
+            <div class="bento-stat-number text-danger">{{ open_count }}</div>
+            <span class="text-muted fs-xs"><span class="badge-pulse-dot danger"></span> Requires staff reply</span>
         </div>
-        <div class="col-6 col-sm-3">
-            <div class="card border-0 shadow-sm text-center py-3 border-start border-warning border-3">
-                <div class="card-body p-2">
-                    <div class="fs-3 fw-bold text-warning">{{ in_progress_count }}</div>
-                    <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.7rem; letter-spacing: 0.05rem;">In Progress</small>
+
+        <div class="bento-stat-card accent-amber">
+            <div class="flex items-center justify-between mb-1">
+                <span class="fs-xs fw-bold text-warning text-uppercase">In Progress</span>
+                <div class="stat-icon-wrapper amber">
+                    <i class="bi bi-hourglass-split"></i>
                 </div>
             </div>
+            <div class="bento-stat-number" style="color: var(--accent-amber);">{{ in_progress_count }}</div>
+            <span class="text-muted fs-xs">Currently being handled</span>
         </div>
-        <div class="col-6 col-sm-3">
-            <div class="card border-0 shadow-sm text-center py-3 border-start border-success border-3">
-                <div class="card-body p-2">
-                    <div class="fs-3 fw-bold text-success">{{ closed_count }}</div>
-                    <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.7rem; letter-spacing: 0.05rem;">Closed</small>
+
+        <div class="bento-stat-card accent-emerald">
+            <div class="flex items-center justify-between mb-1">
+                <span class="fs-xs fw-bold text-success text-uppercase">Resolved / Closed</span>
+                <div class="stat-icon-wrapper emerald">
+                    <i class="bi bi-check-circle-fill"></i>
                 </div>
             </div>
+            <div class="bento-stat-number text-success">{{ closed_count }}</div>
+            <span class="text-muted fs-xs">Successfully solved</span>
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm mb-4">
-        <div class="card-body py-3 d-flex flex-wrap align-items-center gap-3">
-            <span class="text-muted small fw-semibold me-1">Filter by:</span>
-            <div class="btn-group btn-group-sm" role="group">
-                <a href="?status=all&priority={{ priority_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
-                   class="btn btn-outline-secondary {% if status_filter == 'all' or not status_filter %}active{% endif %}">All Status</a>
-                <a href="?status=open&priority={{ priority_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
-                   class="btn btn-outline-danger {% if status_filter == 'open' %}active{% endif %}">Open</a>
-                <a href="?status=in_progress&priority={{ priority_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
-                   class="btn btn-outline-warning {% if status_filter == 'in_progress' %}active{% endif %}">In Progress</a>
-                <a href="?status=closed&priority={{ priority_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
-                   class="btn btn-outline-success {% if status_filter == 'closed' %}active{% endif %}">Closed</a>
+    <!-- Filter Toolbar Card -->
+    <div class="filter-bar-card mb-4">
+        <div class="flex items-center gap-3 flex-wrap">
+            <div class="flex items-center gap-2">
+                <span class="text-muted fs-xs fw-bold text-uppercase me-1"><i class="bi bi-funnel-fill text-primary"></i> Status:</span>
+                <div class="btn-group">
+                    <a href="?status=all&priority={{ priority_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                       class="btn btn-sm btn-outline-secondary {% if status_filter == 'all' or not status_filter %}active{% endif %}">All</a>
+                    <a href="?status=open&priority={{ priority_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                       class="btn btn-sm btn-outline-danger {% if status_filter == 'open' %}active{% endif %}">Open</a>
+                    <a href="?status=in_progress&priority={{ priority_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                       class="btn btn-sm btn-outline-warning {% if status_filter == 'in_progress' %}active{% endif %}">In Progress</a>
+                    <a href="?status=closed&priority={{ priority_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                       class="btn btn-sm btn-outline-success {% if status_filter == 'closed' %}active{% endif %}">Closed</a>
+                </div>
             </div>
-            <div class="vr d-none d-sm-block"></div>
-            <div class="btn-group btn-group-sm" role="group">
-                <a href="?priority=all&status={{ status_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
-                   class="btn btn-outline-secondary {% if priority_filter == 'all' or not priority_filter %}active{% endif %}">All Priority</a>
-                <a href="?priority=high&status={{ status_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
-                   class="btn btn-outline-danger {% if priority_filter == 'high' %}active{% endif %}">High</a>
-                <a href="?priority=medium&status={{ status_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
-                   class="btn btn-outline-warning {% if priority_filter == 'medium' %}active{% endif %}">Medium</a>
-                <a href="?priority=low&status={{ status_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
-                   class="btn btn-outline-secondary {% if priority_filter == 'low' %}active{% endif %}">Low</a>
+
+            <div style="height: 24px; width: 1px; background: var(--border-subtle);"></div>
+
+            <div class="flex items-center gap-2">
+                <span class="text-muted fs-xs fw-bold text-uppercase me-1">Priority:</span>
+                <div class="btn-group">
+                    <a href="?priority=all&status={{ status_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                       class="btn btn-sm btn-outline-secondary {% if priority_filter == 'all' or not priority_filter %}active{% endif %}">All</a>
+                    <a href="?priority=high&status={{ status_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                       class="btn btn-sm btn-outline-danger {% if priority_filter == 'high' %}active{% endif %}">High</a>
+                    <a href="?priority=medium&status={{ status_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                       class="btn btn-sm btn-outline-warning {% if priority_filter == 'medium' %}active{% endif %}">Medium</a>
+                    <a href="?priority=low&status={{ status_filter }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                       class="btn btn-sm btn-outline-secondary {% if priority_filter == 'low' %}active{% endif %}">Low</a>
+                </div>
             </div>
-            <div class="ms-auto text-muted small">
-                Showing <strong>{{ page_obj.paginator.count }}</strong> ticket(s)
-            </div>
+        </div>
+
+        <div class="text-muted fs-sm">
+            Showing <strong class="text-dark">{{ page_obj.paginator.count }}</strong> ticket(s)
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th scope="col" class="ps-4">Customer</th>
-                            <th scope="col">Title</th>
-                            <th scope="col" class="text-center">Priority</th>
-                            <th scope="col" class="text-center">Status</th>
-                            <th scope="col">Submitted</th>
-                            <th scope="col" class="text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for ticket in page_obj %}
-                        <tr>
-                            <td class="ps-4">
-                                <div class="d-flex align-items-center">
-                                    <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center me-2 flex-shrink-0"
-                                         style="width: 36px; height: 36px; font-size: 0.8rem; font-weight: 600;">
-                                        {{ ticket.created_by.username|slice:":2"|upper }}
-                                    </div>
-                                    <div>
-                                        <div class="fw-semibold text-dark" style="font-size: 0.9rem;">
-                                            {% if ticket.created_by.get_full_name %}{{ ticket.created_by.get_full_name }}{% else %}{{ ticket.created_by.username }}{% endif %}
-                                        </div>
-                                        <small class="text-muted">{{ ticket.created_by.email }}</small>
-                                    </div>
+    <!-- Tickets Master Card Table -->
+    <div class="data-card-table-wrapper mb-4">
+        <div class="table-responsive-container">
+            <table class="data-table-modern">
+                <thead>
+                    <tr>
+                        <th style="width: 250px;">Customer</th>
+                        <th>Subject &amp; Thread</th>
+                        <th class="text-center" style="width: 120px;">Priority</th>
+                        <th class="text-center" style="width: 160px;">Live Status</th>
+                        <th style="width: 140px;">Submitted</th>
+                        <th class="text-end" style="width: 160px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in page_obj %}
+                    <tr>
+                        <td>
+                            <div class="flex items-center gap-3">
+                                <div class="avatar-circle">
+                                    {{ ticket.created_by.username|slice:":2"|upper }}
                                 </div>
-                            </td>
-                            <td><span class="fw-medium text-dark">{{ ticket.title }}</span></td>
-                            <td class="text-center">
-                                {% if ticket.priority == 'High' %}
-                                    <span class="badge bg-danger bg-opacity-10 text-danger border border-danger px-2 py-1">High</span>
-                                {% elif ticket.priority == 'Medium' %}
-                                    <span class="badge bg-warning bg-opacity-10 text-warning border border-warning px-2 py-1">Medium</span>
-                                {% else %}
-                                    <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary px-2 py-1">Low</span>
-                                {% endif %}
-                            </td>
-                            <td class="text-center">
-                                <select class="form-select form-select-sm status-selector border-0 rounded bg-light" 
-                                         data-ticket-id="{{ ticket.id }}"
-                                         data-update-url="{% url 'admin_ticket_update_status' %}"
-                                         style="width: 130px; font-weight: 600; cursor: pointer;">
-                                     <option value="Open" {% if ticket.status == 'Open' %}selected{% endif %} class="text-danger">Open</option>
-                                     <option value="In Progress" {% if ticket.status == 'In Progress' %}selected{% endif %} class="text-warning">In Progress</option>
-                                     <option value="Closed" {% if ticket.status == 'Closed' %}selected{% endif %} class="text-success">Closed</option>
-                                 </select>
-                            </td>
-                            <td class="text-muted" style="font-size: 0.875rem; white-space: nowrap;">
-                                {{ ticket.created_at|date:"M d, Y" }}<br>
-                                <small>{{ ticket.created_at|date:"H:i" }}</small>
-                            </td>
-                            <td class="text-center">
-                                <button class="btn btn-sm btn-outline-primary px-3 rounded-2" type="button" data-bs-toggle="collapse" data-bs-target="#ticket-details-{{ ticket.id }}" aria-expanded="false" aria-controls="ticket-details-{{ ticket.id }}">
-                                    <i class="bi bi-chat-left-text me-1"></i> Details & Reply
-                                </button>
-                            </td>
-                        </tr>
-                        
-                        <tr id="ticket-details-{{ ticket.id }}" class="collapse bg-light bg-opacity-25">
-                            <td colspan="6" class="p-4">
-                                <div class="card card-body border-0 shadow-sm p-4 rounded-3 bg-white">
-                                    <h6 class="fw-bold mb-2 text-dark">Ticket Description:</h6>
-                                    <p class="text-muted" style="white-space: pre-line;">{{ ticket.description }}</p>
+                                <div>
+                                    <div class="fw-bold text-dark fs-sm">
+                                        {% if ticket.created_by.get_full_name %}{{ ticket.created_by.get_full_name }}{% else %}{{ ticket.created_by.username }}{% endif %}
+                                    </div>
+                                    <span class="text-muted fs-xs">{{ ticket.created_by.email }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="fw-bold text-dark fs-sm mb-1">
+                                #TCK-{{ ticket.id }}: {{ ticket.title }}
+                            </div>
+                            <div class="text-muted fs-xs text-truncate" style="max-width: 380px;">
+                                {{ ticket.description }}
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            {% if ticket.priority == 'High' %}
+                                <span class="badge badge-high">
+                                    <span class="badge-pulse-dot danger"></span> High
+                                </span>
+                            {% elif ticket.priority == 'Medium' %}
+                                <span class="badge badge-medium">
+                                    <span class="badge-pulse-dot warning"></span> Medium
+                                </span>
+                            {% else %}
+                                <span class="badge badge-low">Low</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <select class="form-select form-select-sm status-selector" 
+                                    data-ticket-id="{{ ticket.id }}"
+                                    data-update-url="{% url 'admin_ticket_update_status' %}"
+                                    style="padding: 0.35rem 0.65rem; font-size: 0.8rem; font-weight: 600; cursor: pointer; border-radius: var(--radius-sm);">
+                                 <option value="Open" {% if ticket.status == 'Open' %}selected{% endif %}>🔴 Open</option>
+                                 <option value="In Progress" {% if ticket.status == 'In Progress' %}selected{% endif %}>🟡 In Progress</option>
+                                 <option value="Closed" {% if ticket.status == 'Closed' %}selected{% endif %}>🟢 Closed</option>
+                            </select>
+                        </td>
+                        <td>
+                            <div class="text-dark fs-xs fw-semibold">{{ ticket.created_at|date:"M d, Y" }}</div>
+                            <span class="text-muted fs-xs">{{ ticket.created_at|date:"H:i" }}</span>
+                        </td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-outline-primary" type="button" data-toggle="collapse" data-target="#ticket-details-{{ ticket.id }}">
+                                <i class="bi bi-chat-left-text"></i> Reply &amp; History
+                            </button>
+                        </td>
+                    </tr>
+                    
+                    <!-- Collapsible Staff Reply & Thread Section -->
+                    <tr id="ticket-details-{{ ticket.id }}" class="collapse" style="background: #f8fafc;">
+                        <td colspan="6" style="padding: 1.5rem 1.75rem; border-bottom: 1.5px solid var(--border-subtle);">
+                            <div style="background: #ffffff; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: var(--shadow-sm);">
+                                <div class="mb-3">
+                                    <span class="fs-xs fw-bold text-muted text-uppercase d-block mb-1">
+                                        <i class="bi bi-file-earmark-text text-primary me-1"></i> Customer's Original Issue:
+                                    </span>
+                                    <div class="p-3" style="background: var(--slate-50); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); font-size: 0.9rem; line-height: 1.6; white-space: pre-line;">{{ ticket.description }}</div>
+                                </div>
+                                
+                                <div class="mb-3 pt-3 border-top" style="border-color: var(--border-subtle);">
+                                    <span class="fs-xs fw-bold text-muted text-uppercase d-block mb-2">
+                                        <i class="bi bi-chat-square-dots-fill text-primary me-1"></i> Conversation Timeline:
+                                    </span>
                                     
-                                    <hr class="my-4">
-                                    <h6 class="fw-bold mb-3"><i class="bi bi-reply-all-fill text-primary me-2"></i>Replies History</h6>
-                                    <div class="reply-thread mb-3">
+                                    <div class="flex flex-col gap-2">
                                         {% for reply in ticket.replies.all %}
-                                            <div class="p-3 mb-2 rounded bg-light border-start border-primary border-3">
-                                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                                    <strong class="text-dark small"><i class="bi bi-person-badge-fill text-muted me-1"></i>{{ reply.replied_by.username }} (Staff)</strong>
-                                                    <small class="text-muted" style="font-size: 0.75rem;">{{ reply.created_at|date:"M d, Y H:i" }}</small>
+                                            <div class="p-3" style="background: var(--slate-50); border-left: 3px solid var(--primary-500); border-radius: var(--radius-sm);">
+                                                <div class="flex items-center justify-between mb-1">
+                                                    <strong class="text-primary fs-xs">
+                                                        <i class="bi bi-person-badge me-1"></i>{{ reply.replied_by.username }} (Staff Member)
+                                                    </strong>
+                                                    <span class="text-muted fs-xs">{{ reply.created_at|date:"M d, Y • H:i" }}</span>
                                                 </div>
-                                                <p class="mb-0 text-muted small" style="white-space: pre-line;">{{ reply.body }}</p>
+                                                <div class="text-dark small" style="white-space: pre-line;">{{ reply.body }}</div>
                                             </div>
                                         {% empty %}
-                                            <div class="text-muted small italic p-2 bg-light rounded text-center">No replies posted yet. Use the form below to send one.</div>
+                                            <div class="text-center py-3 text-muted fs-xs" style="background: var(--slate-50); border-radius: var(--radius-sm); border: 1px dashed var(--border-subtle);">
+                                                No replies posted yet. Use the form below to respond to this customer.
+                                            </div>
                                         {% endfor %}
                                     </div>
-                                    
-                                    <form method="POST" action="{% url 'admin_ticket_reply' %}" class="mt-4">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
-                                        <div class="mb-3">
-                                            <label class="form-label small fw-semibold text-muted">Post a Reply</label>
-                                            <textarea class="form-control" name="body" rows="3" required placeholder="Type your reply to customer..."></textarea>
-                                        </div>
-                                        <div class="text-end">
-                                            <button type="submit" class="btn btn-sm btn-primary-modern px-4"><i class="bi bi-send-fill me-1"></i>Send Reply</button>
-                                        </div>
-                                    </form>
                                 </div>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="6" class="text-center py-5 text-muted">
-                                <i class="bi bi-ticket-detailed fs-1 opacity-50 d-block mb-3"></i>
-                                <div class="fw-semibold">No tickets found</div>
-                                <small>No tickets match the current search or filter criteria.</small>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                                
+                                <!-- Fast Reply Form -->
+                                <form method="POST" action="{% url 'admin_ticket_reply' %}" class="mt-4 pt-3 border-top" style="border-color: var(--border-subtle);">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label fs-xs fw-bold text-muted text-uppercase">Post Staff Response to Customer</label>
+                                        <textarea class="form-control" name="body" rows="3" required placeholder="Type your message to resolve customer inquiry..."></textarea>
+                                    </div>
+                                    <div class="flex justify-end">
+                                        <button type="submit" class="btn btn-primary btn-sm">
+                                            <i class="bi bi-send-fill"></i> Send Staff Response
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <i class="bi bi-ticket-detailed fs-1 d-block mb-3" style="opacity: 0.35;"></i>
+                            <div class="fw-bold fs-sm">No tickets found</div>
+                            <span class="fs-xs">No tickets match the current status, priority, or search filter.</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-        <div class="card-footer bg-white border-0 py-3">
+        
+        <div class="p-3 border-top" style="border-color: var(--border-subtle); background: #ffffff;">
             {% include "components/pagination.html" with page_obj=page_obj %}
         </div>
     </div>
-
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/tickets.js' %}"></script>
+<script src="{% static 'js/tickets.js' %}?v=4.0.0"></script>
 {% endblock %}

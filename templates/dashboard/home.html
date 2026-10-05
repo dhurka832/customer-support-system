@@ -1,186 +1,264 @@
 {% extends 'dashboard/base.html' %}
 {% load static %}
 
-{% block title %}Dashboard | System Manager{% endblock %}
+{% block title %}Admin Dashboard | SupportSphere Operations{% endblock %}
 
 {% block content %}
 <div class="container-fluid py-4 px-4">
-    <div class="row align-items-center mb-4 g-3">
-        <div class="col-12 col-md-6">
-            <h1 class="h3 text-dark font-weight-bold mb-1">Welcome back, Admin</h1>
-            <p class="text-muted mb-0">System metrics and log summaries for today, {{ today_date|date:"F d, Y" }}.</p>
-        </div>
-    </div>
-
-    <div class="row g-3 mb-4">
-        <div class="col-12 col-sm-6 col-xl-3 animate-slide-up delay-100">
-            <div class="card border-0 shadow-sm h-100 hover-elevate border-start border-primary border-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <small class="text-muted text-uppercase fw-bold" style="font-size: 0.75rem; letter-spacing: 0.05rem;">Registered Users</small>
-                            <h2 class="mb-0 mt-1 font-weight-bold text-dark">{{ total_users }}</h2>
-                        </div>
-                        <div class="bg-primary bg-opacity-10 text-primary rounded p-3">
-                            <i class="bi bi-people fs-4"></i>
-                        </div>
-                    </div>
-                    <div class="mt-2 text-muted small">
-                        Avg: <strong>{{ avg_conversations }}</strong> chats/user
-                    </div>
+    <!-- Hero Welcome Card -->
+    <div class="hero-welcome-card mb-4 animate-slide-up">
+        <div class="flex items-center justify-between flex-wrap gap-3">
+            <div>
+                <div class="inline-flex items-center gap-2 px-3 py-1 mb-2 rounded-full" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: var(--radius-full); font-size: 0.78rem; font-weight: 600;">
+                    <span class="badge-pulse-dot success"></span>
+                    <span>System Operational &amp; Vector Index Ready</span>
                 </div>
+                <h1 class="text-white mb-1" style="font-size: 1.85rem;">Welcome back, {{ request.user.username }}</h1>
+                <p class="text-white small m-0" style="opacity: 0.75;">Overview of support operations, customer inquiries, and AI chat logs for {{ today_date|date:"l, F d, Y" }}.</p>
             </div>
-        </div>
-
-        <div class="col-12 col-sm-6 col-xl-3 animate-slide-up delay-200">
-            <div class="card border-0 shadow-sm h-100 hover-elevate border-start border-success border-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <small class="text-muted text-uppercase fw-bold" style="font-size: 0.75rem; letter-spacing: 0.05rem;">Conversations</small>
-                            <h2 class="mb-0 mt-1 font-weight-bold text-dark">{{ total_conversations }}</h2>
-                        </div>
-                        <div class="bg-success bg-opacity-10 text-success rounded p-3">
-                            <i class="bi bi-chat-left-text fs-4"></i>
-                        </div>
-                    </div>
-                    <div class="mt-2 text-muted small">
-                        Total conversation threads logged
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-sm-6 col-xl-3 animate-slide-up delay-300">
-            <div class="card border-0 shadow-sm h-100 hover-elevate border-start border-warning border-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <small class="text-muted text-uppercase fw-bold" style="font-size: 0.75rem; letter-spacing: 0.05rem;">AI Messages</small>
-                            <h2 class="mb-0 mt-1 font-weight-bold text-dark">{{ total_messages }}</h2>
-                        </div>
-                        <div class="bg-warning bg-opacity-10 text-warning rounded p-3">
-                            <i class="bi bi-chat-dots fs-4"></i>
-                        </div>
-                    </div>
-                    <div class="mt-2 text-muted small">
-                        Avg: <strong>{{ avg_messages }}</strong> messages/user
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-sm-6 col-xl-3 animate-slide-up delay-400">
-            <div class="card border-0 shadow-sm h-100 hover-elevate border-start border-info border-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <small class="text-muted text-uppercase fw-bold" style="font-size: 0.75rem; letter-spacing: 0.05rem;">Active Users Today</small>
-                            <h2 class="mb-0 mt-1 font-weight-bold text-dark">{{ active_users_today }}</h2>
-                        </div>
-                        <div class="bg-info bg-opacity-10 text-info rounded p-3">
-                            <i class="bi bi-activity fs-4"></i>
-                        </div>
-                    </div>
-                    <div class="mt-2 text-muted small">
-                        Unique user logins today
-                    </div>
-                </div>
+            
+            <div class="flex items-center gap-2 flex-wrap">
+                <a href="{% url 'upload-document' %}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-cloud-arrow-up-fill"></i> Upload PDF
+                </a>
+                <a href="{% url 'admin_tickets' %}" class="btn btn-secondary btn-sm" style="background: rgba(255,255,255,0.12); color: #fff; border-color: rgba(255,255,255,0.2);">
+                    <i class="bi bi-ticket-detailed"></i> View Tickets
+                </a>
             </div>
         </div>
     </div>
 
-
-
-    <div class="row g-4">
-        <div class="col-12 col-xl-6">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-header bg-transparent border-0 pt-4 pb-0 d-flex justify-content-between align-items-center">
-                    <h5 class="card-title text-dark font-weight-bold mb-0">Latest Customer Registrations</h5>
-                    <a href="{% url 'admin_customers' %}" class="btn btn-link btn-sm text-decoration-none p-0">Directory &raquo;</a>
+    <!-- Bento Grid Stat Cards -->
+    <div class="grid grid-4 gap-3 mb-4">
+        <!-- Card 1: Users -->
+        <div class="bento-stat-card accent-indigo animate-slide-up delay-100">
+            <div class="flex items-center justify-between mb-2">
+                <span class="fs-xs fw-bold text-muted text-uppercase" style="letter-spacing: 0.05em;">Registered Users</span>
+                <div class="stat-icon-wrapper indigo">
+                    <i class="bi bi-people-fill"></i>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Customer</th>
-                                    <th>Email</th>
-                                    <th>Date Joined</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for u in latest_customers %}
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; font-size: 0.8rem; font-weight: 600;">
-                                                {{ u.username|slice:":2"|upper }}
-                                            </div>
-                                            <span class="fw-semibold text-dark">{{ u.username }}</span>
-                                        </div>
-                                    </td>
-                                    <td>{{ u.email }}</td>
-                                    <td class="text-muted">{{ u.date_joined|date:"M d, Y" }}</td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="3" class="text-center py-4 text-muted">No users registered yet.</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+            </div>
+            <div>
+                <div class="bento-stat-number">{{ total_users }}</div>
+                <div class="flex items-center justify-between mt-2 pt-2 border-top" style="border-color: var(--border-subtle);">
+                    <span class="text-muted fs-xs">Average activity</span>
+                    <span class="trend-indicator up">{{ avg_conversations }} chats/user</span>
                 </div>
             </div>
         </div>
 
-        <div class="col-12 col-xl-6">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-header bg-transparent border-0 pt-4 pb-0 d-flex justify-content-between align-items-center">
-                    <h5 class="card-title text-dark font-weight-bold mb-0">Recent Support Chats</h5>
-                    <a href="{% url 'admin_conversations' %}" class="btn btn-link btn-sm text-decoration-none p-0">View All Logs &raquo;</a>
+        <!-- Card 2: Conversations -->
+        <div class="bento-stat-card accent-emerald animate-slide-up delay-200">
+            <div class="flex items-center justify-between mb-2">
+                <span class="fs-xs fw-bold text-muted text-uppercase" style="letter-spacing: 0.05em;">Conversations</span>
+                <div class="stat-icon-wrapper emerald">
+                    <i class="bi bi-chat-left-text-fill"></i>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Customer</th>
-                                    <th>Email</th>
-                                    <th>Topic Title</th>
-                                    <th>Started</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for conv in recent_conversations %}
-                                <tr>
-                                    <td>
-                                        <div class="text-dark fw-semibold">
-                                            {% if conv.user.get_full_name %}{{ conv.user.get_full_name }}{% else %}{{ conv.user.username }}{% endif %}
-                                        </div>
-                                    </td>
-                                    <td class="text-muted small">{{ conv.user.email }}</td>
-                                    <td>
-                                        <a href="{% url 'admin_customer_detail' conv.user.id %}#collapse-{{ conv.id }}" class="text-decoration-none text-primary fw-medium">
-                                            {{ conv.title|truncatechars:30 }}
+            </div>
+            <div>
+                <div class="bento-stat-number text-success">{{ total_conversations }}</div>
+                <div class="flex items-center justify-between mt-2 pt-2 border-top" style="border-color: var(--border-subtle);">
+                    <span class="text-muted fs-xs">Total logged</span>
+                    <span class="trend-indicator up"><i class="bi bi-check2"></i> Active Index</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: AI Messages -->
+        <div class="bento-stat-card accent-amber animate-slide-up delay-300">
+            <div class="flex items-center justify-between mb-2">
+                <span class="fs-xs fw-bold text-muted text-uppercase" style="letter-spacing: 0.05em;">AI Messages</span>
+                <div class="stat-icon-wrapper amber">
+                    <i class="bi bi-chat-dots-fill"></i>
+                </div>
+            </div>
+            <div>
+                <div class="bento-stat-number" style="color: var(--accent-amber);">{{ total_messages }}</div>
+                <div class="flex items-center justify-between mt-2 pt-2 border-top" style="border-color: var(--border-subtle);">
+                    <span class="text-muted fs-xs">Dialogue density</span>
+                    <span class="trend-indicator neutral">{{ avg_messages }} msgs/user</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 4: Active Users Today -->
+        <div class="bento-stat-card accent-sky animate-slide-up delay-400">
+            <div class="flex items-center justify-between mb-2">
+                <span class="fs-xs fw-bold text-muted text-uppercase" style="letter-spacing: 0.05em;">Active Today</span>
+                <div class="stat-icon-wrapper sky">
+                    <i class="bi bi-lightning-charge-fill"></i>
+                </div>
+            </div>
+            <div>
+                <div class="bento-stat-number text-sky">{{ active_users_today }}</div>
+                <div class="flex items-center justify-between mt-2 pt-2 border-top" style="border-color: var(--border-subtle);">
+                    <span class="text-muted fs-xs">Unique daily logins</span>
+                    <span class="trend-indicator up"><span class="badge-pulse-dot info"></span> Real-time</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Shortcuts Card Deck -->
+    <div class="grid grid-4 gap-3 mb-4">
+        <a href="{% url 'admin_customers' %}" class="quick-action-card">
+            <div class="action-icon" style="background: rgba(99, 102, 241, 0.12); color: var(--primary-600);">
+                <i class="bi bi-person-lines-fill"></i>
+            </div>
+            <div>
+                <div class="fw-bold fs-sm text-dark">Customer Directory</div>
+                <div class="text-muted fs-xs">Search accounts &amp; history</div>
+            </div>
+        </a>
+
+        <a href="{% url 'admin_tickets' %}" class="quick-action-card">
+            <div class="action-icon" style="background: rgba(244, 63, 94, 0.12); color: var(--accent-rose);">
+                <i class="bi bi-ticket-detailed-fill"></i>
+            </div>
+            <div>
+                <div class="fw-bold fs-sm text-dark">Support Tickets</div>
+                <div class="text-muted fs-xs">Manage &amp; reply to issues</div>
+            </div>
+        </a>
+
+        <a href="{% url 'admin_conversations' %}" class="quick-action-card">
+            <div class="action-icon" style="background: rgba(16, 185, 129, 0.12); color: var(--accent-emerald);">
+                <i class="bi bi-chat-square-quote-fill"></i>
+            </div>
+            <div>
+                <div class="fw-bold fs-sm text-dark">Chat Logs</div>
+                <div class="text-muted fs-xs">Inspect AI inquiries</div>
+            </div>
+        </a>
+
+        <a href="{% url 'document-list' %}" class="quick-action-card">
+            <div class="action-icon" style="background: rgba(139, 92, 246, 0.12); color: var(--accent-violet);">
+                <i class="bi bi-journal-bookmark-fill"></i>
+            </div>
+            <div>
+                <div class="fw-bold fs-sm text-dark">Knowledge Base</div>
+                <div class="text-muted fs-xs">Index PDF documents</div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Split Cards Section -->
+    <div class="grid-split-dashboard">
+        <!-- Left Split: Latest Customers -->
+        <div class="card-modern p-0">
+            <div class="flex items-center justify-between p-4 border-bottom" style="border-color: var(--border-subtle);">
+                <div class="flex items-center gap-2">
+                    <i class="bi bi-person-check-fill text-primary" style="font-size: 1.2rem;"></i>
+                    <h3 class="m-0">Latest Registrations</h3>
+                </div>
+                <a href="{% url 'admin_customers' %}" class="btn btn-sm btn-outline-primary">
+                    View All Directory &rarr;
+                </a>
+            </div>
+
+            <div class="table-responsive-container">
+                <table class="data-table-modern">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Email Address</th>
+                            <th>Date Joined</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in latest_customers %}
+                        <tr>
+                            <td>
+                                <div class="flex items-center gap-3">
+                                    <div class="avatar-circle">
+                                        {{ u.username|slice:":2"|upper }}
+                                    </div>
+                                    <div>
+                                        <a href="{% url 'admin_customer_detail' u.id %}" class="fw-bold text-dark d-block">
+                                            {% if u.get_full_name %}{{ u.get_full_name }}{% else %}{{ u.username }}{% endif %}
                                         </a>
-                                    </td>
-                                    <td class="text-muted">{{ conv.created_at|date:"M d, Y H:i" }}</td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="4" class="text-center py-4 text-muted">No conversation records logged.</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                                        <span class="text-muted fs-xs">@{{ u.username }}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="text-muted fs-sm">{{ u.email|default:"No email" }}</span>
+                            </td>
+                            <td>
+                                <span class="badge badge-counter">{{ u.date_joined|date:"M d, Y" }}</span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center py-5 text-muted">
+                                <i class="bi bi-people fs-2 mb-2 d-block" style="opacity: 0.4;"></i>
+                                No customer records found.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Right Split: Recent Conversations -->
+        <div class="card-modern p-0">
+            <div class="flex items-center justify-between p-4 border-bottom" style="border-color: var(--border-subtle);">
+                <div class="flex items-center gap-2">
+                    <i class="bi bi-chat-left-quote-fill text-success" style="font-size: 1.2rem;"></i>
+                    <h3 class="m-0">Recent Support Chats</h3>
                 </div>
+                <a href="{% url 'admin_conversations' %}" class="btn btn-sm btn-outline-primary">
+                    View All Logs &rarr;
+                </a>
+            </div>
+
+            <div class="table-responsive-container">
+                <table class="data-table-modern">
+                    <thead>
+                        <tr>
+                            <th>Topic &amp; Customer</th>
+                            <th>Timestamp</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for conv in recent_conversations %}
+                        <tr>
+                            <td>
+                                <div class="mb-1">
+                                    <a href="{% url 'admin_customer_detail' conv.user.id %}#collapse-{{ conv.id }}" class="fw-bold text-primary">
+                                        {{ conv.title|truncatechars:38 }}
+                                    </a>
+                                </div>
+                                <div class="flex items-center gap-2 text-muted fs-xs">
+                                    <i class="bi bi-person"></i>
+                                    <span>{% if conv.user.get_full_name %}{{ conv.user.get_full_name }}{% else %}{{ conv.user.username }}{% endif %}</span>
+                                    <span>&bull;</span>
+                                    <span>{{ conv.user.email }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="text-muted fs-xs">{{ conv.created_at|date:"M d, H:i" }}</span>
+                            </td>
+                            <td class="text-end">
+                                <a href="{% url 'admin_customer_detail' conv.user.id %}#collapse-{{ conv.id }}" class="btn btn-sm btn-secondary">
+                                    <i class="bi bi-eye"></i> Log
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center py-5 text-muted">
+                                <i class="bi bi-chat-dots fs-2 mb-2 d-block" style="opacity: 0.4;"></i>
+                                No recent conversation threads recorded.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
-
-

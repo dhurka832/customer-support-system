@@ -1,103 +1,132 @@
 {% extends "base.html" %}
+{% block title %}My Support Tickets | SupportSphere{% endblock %}
+
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="flex items-center justify-between flex-wrap gap-3 mb-4">
     <div>
-        <h2 class="fw-bold mb-1">My Support Tickets</h2>
-        <p class="text-muted small mb-0">Track and manage your submitted support queries and responses from our staff.</p>
+        <h2 class="mb-1">Customer Support Tickets</h2>
+        <p class="text-muted small m-0">Track, manage, and view responses to your submitted inquiries from our staff team.</p>
     </div>
-    <a href="{% url 'create-ticket' %}" class="btn btn-primary-modern px-3 py-2">
-        <i class="bi bi-plus-circle-fill me-1"></i> New Ticket
+    <a href="{% url 'create-ticket' %}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Create New Ticket
     </a>
 </div>
 
-<div class="row g-3">
+<div class="grid grid-1 gap-3">
     {% for ticket in tickets %}
-        <div class="col-12 animate-slide-up">
-            <div class="card card-modern p-3">
-                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="p-2 bg-indigo bg-opacity-10 text-indigo rounded-3" style="font-size: 1.25rem;">
-                            <i class="bi bi-chat-left-text-fill"></i>
-                        </div>
-                        <div>
-                            <h5 class="fw-bold text-dark mb-1">{{ ticket.title }}</h5>
-                            <span class="text-muted small">Submitted: {{ ticket.created_at|date:"M d, Y H:i" }}</span>
-                        </div>
+        <div class="ticket-item-card animate-slide-up">
+            <div class="flex items-center justify-between flex-wrap gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="ticket-avatar-badge">
+                        <i class="bi bi-ticket-detailed-fill"></i>
                     </div>
-                    
-                    <div class="d-flex align-items-center gap-3 flex-wrap">
-                        {% if ticket.priority == 'High' %}
-                            <span class="badge bg-danger bg-opacity-10 text-danger border border-danger px-3 py-2 rounded-pill small">
-                                <span class="badge-pulse-dot danger"></span>High
-                            </span>
-                        {% elif ticket.priority == 'Medium' %}
-                            <span class="badge bg-warning bg-opacity-10 text-warning border border-warning px-3 py-2 rounded-pill small">
-                                <span class="badge-pulse-dot warning"></span>Medium
-                            </span>
-                        {% else %}
-                            <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary px-3 py-2 rounded-pill small">Low</span>
-                        {% endif %}
-
-                        {% if ticket.status == 'Open' %}
-                            <span class="badge rounded-pill bg-danger px-3 py-2">
-                                <span class="badge-pulse-dot danger"></span>Open
-                            </span>
-                        {% elif ticket.status == 'In Progress' %}
-                            <span class="badge rounded-pill bg-warning text-dark px-3 py-2">
-                                <span class="badge-pulse-dot warning"></span>In Progress
-                            </span>
-                        {% else %}
-                            <span class="badge rounded-pill bg-success px-3 py-2">
-                                <span class="badge-pulse-dot success"></span>Closed
-                            </span>
-                        {% endif %}
-
-                        <div class="btn-group gap-2">
-                            <button class="btn btn-sm btn-secondary-modern px-3 py-2" type="button" data-bs-toggle="collapse" data-bs-target="#replies-{{ ticket.id }}">
-                                <i class="bi bi-eye-fill me-1"></i> View Thread
-                            </button>
-                            <a href="{% url 'update-ticket' ticket.id %}" class="btn btn-sm btn-outline-secondary px-2 py-2">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <a href="{% url 'delete-ticket' ticket.id %}" class="btn btn-sm btn-outline-danger px-2 py-2">
-                                <i class="bi bi-trash"></i>
-                            </a>
+                    <div>
+                        <div class="flex items-center gap-2 mb-1 flex-wrap">
+                            <span class="fs-xs fw-bold text-muted text-uppercase">#TCK-{{ ticket.id }}</span>
+                            <h4 class="text-dark m-0">{{ ticket.title }}</h4>
                         </div>
+                        <span class="text-muted fs-xs">
+                            <i class="bi bi-clock me-1"></i>Submitted: {{ ticket.created_at|date:"M d, Y • H:i" }}
+                        </span>
                     </div>
                 </div>
+                
+                <div class="flex items-center gap-2 flex-wrap">
+                    {% if ticket.priority == 'High' %}
+                        <span class="badge badge-high">
+                            <span class="badge-pulse-dot danger"></span> High Priority
+                        </span>
+                    {% elif ticket.priority == 'Medium' %}
+                        <span class="badge badge-medium">
+                            <span class="badge-pulse-dot warning"></span> Medium
+                        </span>
+                    {% else %}
+                        <span class="badge badge-low">Low</span>
+                    {% endif %}
 
-                <div id="replies-{{ ticket.id }}" class="collapse mt-3 pt-3 border-top bg-light bg-opacity-50 p-3 rounded-3">
-                    <h6 class="fw-bold text-dark mb-2">Description:</h6>
-                    <p class="text-muted small" style="white-space: pre-line;">{{ ticket.description }}</p>
-                    
-                    <hr class="my-3">
-                    
-                    <h6 class="fw-bold text-dark mb-3"><i class="bi bi-reply-fill text-primary me-1"></i>Admin Updates & Replies</h6>
-                    <div class="customer-replies">
-                        {% for reply in ticket.replies.all %}
-                            <div class="p-3 mb-2 rounded bg-white border">
-                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <strong class="text-primary small"><i class="bi bi-person-fill me-1"></i>Staff Member ({{ reply.replied_by.username }})</strong>
-                                    <small class="text-muted" style="font-size: 0.7rem;">{{ reply.created_at|date:"M d, Y H:i" }}</small>
-                                </div>
-                                <p class="mb-0 text-muted small" style="white-space: pre-line;">{{ reply.body }}</p>
-                            </div>
-                        {% empty %}
-                            <div class="text-muted small text-center p-2">No replies yet. Admins are reviewing your ticket.</div>
-                        {% endfor %}
+                    {% if ticket.status == 'Open' %}
+                        <span class="badge badge-open">
+                            <span class="badge-pulse-dot danger"></span> Open
+                        </span>
+                    {% elif ticket.status == 'In Progress' %}
+                        <span class="badge badge-in-progress">
+                            <span class="badge-pulse-dot warning"></span> In Progress
+                        </span>
+                    {% else %}
+                        <span class="badge badge-closed">
+                            <span class="badge-pulse-dot success"></span> Closed
+                        </span>
+                    {% endif %}
+
+                    <div class="btn-group ms-2">
+                        <button class="btn btn-sm btn-secondary" type="button" data-toggle="collapse" data-target="#replies-{{ ticket.id }}">
+                            <i class="bi bi-chat-text-fill text-primary"></i> 
+                            <span>Thread</span>
+                            {% if ticket.replies.all|length > 0 %}
+                                <span class="badge badge-primary ms-1" style="font-size: 0.65rem; padding: 0.15rem 0.45rem;">{{ ticket.replies.all|length }}</span>
+                            {% endif %}
+                        </button>
+                        <a href="{% url 'update-ticket' ticket.id %}" class="btn btn-sm btn-outline-secondary" title="Edit Ticket">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+                        <a href="{% url 'delete-ticket' ticket.id %}" class="btn btn-sm btn-outline-danger" title="Delete Ticket">
+                            <i class="bi bi-trash-fill"></i>
+                        </a>
                     </div>
+                </div>
+            </div>
+
+            <!-- Collapsible Conversation Thread Body -->
+            <div id="replies-{{ ticket.id }}" class="ticket-accordion-body">
+                <div class="p-3 mb-3" style="background: var(--slate-50); border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="fs-xs fw-bold text-muted text-uppercase">
+                            <i class="bi bi-card-text me-1"></i> Original Description
+                        </span>
+                    </div>
+                    <p class="text-dark small m-0" style="white-space: pre-line; line-height: 1.6;">{{ ticket.description }}</p>
+                </div>
+                
+                <div class="mb-2">
+                    <span class="fs-xs fw-bold text-primary text-uppercase">
+                        <i class="bi bi-chat-left-dots-fill me-1"></i> Staff Updates &amp; Responses
+                    </span>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    {% for reply in ticket.replies.all %}
+                        <div class="p-3" style="background: #ffffff; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-md); box-shadow: var(--shadow-xs);">
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center gap-2">
+                                    <div class="avatar-circle" style="width: 24px; height: 24px; font-size: 0.72rem;">
+                                        {{ reply.replied_by.username|slice:":1"|upper }}
+                                    </div>
+                                    <strong class="text-primary fs-xs">{{ reply.replied_by.username }} (Support Staff)</strong>
+                                </div>
+                                <span class="text-muted fs-xs">{{ reply.created_at|date:"M d, Y • H:i" }}</span>
+                            </div>
+                            <p class="m-0 text-dark small" style="white-space: pre-line; padding-left: 2rem;">{{ reply.body }}</p>
+                        </div>
+                    {% empty %}
+                        <div class="text-center py-4 text-muted small" style="background: var(--slate-50); border-radius: var(--radius-md); border: 1px dashed var(--border-subtle);">
+                            <i class="bi bi-hourglass-split me-1 text-primary"></i> No staff replies yet. Our support agents are reviewing your request.
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
     {% empty %}
-        <div class="col-12">
-            <div class="card card-modern text-center py-5">
-                <div class="card-body">
-                    <i class="bi bi-ticket-detailed text-muted opacity-50 mb-3" style="font-size: 3rem;"></i>
-                    <h4 class="fw-bold mb-2">No tickets submitted</h4>
-                    <p class="text-muted small mb-0">Need more help? Submit a ticket above, and our admins will reply as soon as possible.</p>
-                </div>
+        <div class="card-modern text-center py-5">
+            <div style="font-size: 3.5rem; color: var(--slate-300); margin-bottom: 1rem;">
+                <i class="bi bi-ticket-detailed"></i>
             </div>
+            <h3 class="mb-2">No Support Tickets Yet</h3>
+            <p class="text-muted small mb-4" style="max-width: 420px; margin-left: auto; margin-right: auto;">
+                Have a question, request, or issue with your account? Submit a ticket and our support team will get right on it.
+            </p>
+            <a href="{% url 'create-ticket' %}" class="btn btn-primary">
+                <i class="bi bi-plus-lg"></i> Submit First Ticket
+            </a>
         </div>
     {% endfor %}
 </div>

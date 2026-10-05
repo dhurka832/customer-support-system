@@ -1,52 +1,86 @@
 {% extends 'base.html' %}
-{% block extra_css %}
 {% load static %}
-<link href="{% static 'css/chatbot.css' %}?v=2.0.0" rel="stylesheet">
+
+{% block title %}AI Support Assistant | SupportSphere{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/chatbot.css' %}?v=4.0.0" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-<div class="chat-layout" id="chatLayoutContainer" data-active-conv-id="{{ active_conv.id }}" data-user-name="{{ request.user.username }}">
-    <div class="chat-main w-100">
-        <div class="chat-header-pane">
-            <div>
-                <h5 class="fw-bold text-dark mb-0" id="currentChatTitle">{{ request.user.username }}</h5>
-                <span class="text-muted small"><i class="bi bi-circle-fill text-success me-1" style="font-size: 0.6rem;"></i>Support Agent Online</span>
+<div class="chat-card-wrapper" id="chatLayoutContainer" data-active-conv-id="{{ active_conv.id }}" data-user-name="{{ request.user.username }}">
+    <!-- Chat Card Header -->
+    <div class="chat-card-header">
+        <div class="chat-agent-info">
+            <div class="chat-agent-avatar">
+                <i class="bi bi-robot"></i>
             </div>
-            <div class="d-flex align-items-center gap-2">
-                <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; font-weight: 600; font-size: 0.9rem;">
-                    {{ request.user.username|slice:":2"|upper }}
-                </div>
-                <div class="text-start">
-                    <div class="fw-semibold small text-dark lh-1">{{ request.user.get_full_name|default:request.user.username }}</div>
-                    <small class="text-muted" style="font-size: 0.75rem;">{{ request.user.email }}</small>
+            <div class="chat-agent-meta">
+                <h4 class="text-dark" id="currentChatTitle">SupportSphere Assistant</h4>
+                <div class="chat-agent-status">
+                    <span class="badge-pulse-dot success"></span>
+                    <span>AI Model Active &bull; Retrieval Vector Engine Ready</span>
                 </div>
             </div>
         </div>
 
-        <div class="chat-messages" id="chatMessageLog">
-        </div>
-
-        <div class="px-4 py-2 bg-light" id="typingIndicator" style="display: none;">
-            <div class="typing-indicator d-inline-flex">
-                <span class="bg-primary"></span>
-                <span class="bg-primary"></span>
-                <span class="bg-primary"></span>
+        <div class="flex items-center gap-2">
+            <div class="avatar-circle">
+                {{ request.user.username|slice:":2"|upper }}
+            </div>
+            <div class="text-start">
+                <div class="fw-bold fs-sm text-dark">{{ request.user.get_full_name|default:request.user.username }}</div>
+                <div class="text-muted fs-xs">{{ request.user.email }}</div>
             </div>
         </div>
+    </div>
 
-        <div class="chat-input-pane">
-            <form id="chatForm" class="d-flex gap-2">
-                {% csrf_token %}
-                <input type="text" id="userInput" class="form-control form-control-modern flex-grow-1" placeholder="Type your support question..." autocomplete="off" required>
-                <button type="submit" class="btn btn-primary-modern px-4">
-                    <span>Send</span> <i class="bi bi-send-fill ms-1"></i>
-                </button>
-            </form>
+    <!-- Message Stream -->
+    <div class="chat-messages-container" id="chatMessageLog">
+        <!-- Message bubbles appended dynamically via JS -->
+    </div>
+
+    <!-- Typing Indicator -->
+    <div class="px-4 py-2" id="typingIndicator" style="display: none; background: #f8fafc;">
+        <div class="typing-indicator-box">
+            <span class="text-muted fs-xs fw-semibold me-1">Assistant is generating response</span>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
         </div>
+    </div>
+
+    <!-- Quick Prompts Bar -->
+    <div class="quick-prompts-bar">
+        <span class="fs-xs fw-bold text-muted text-uppercase me-2"><i class="bi bi-lightning-charge-fill text-warning"></i> Suggestions:</span>
+        <button type="button" class="prompt-chip" data-prompt="How do I submit a new support ticket?">
+            <i class="bi bi-ticket-perforated"></i> How to submit a ticket?
+        </button>
+        <button type="button" class="prompt-chip" data-prompt="What are the company customer support policies?">
+            <i class="bi bi-book"></i> Support policies
+        </button>
+        <button type="button" class="prompt-chip" data-prompt="How do I update my profile credentials?">
+            <i class="bi bi-person-badge"></i> Update credentials
+        </button>
+        <button type="button" class="prompt-chip" data-prompt="What is the average response time for high priority issues?">
+            <i class="bi bi-speedometer2"></i> Response times
+        </button>
+    </div>
+
+    <!-- Chat Input Bar -->
+    <div class="chat-input-bar">
+        <form id="chatForm" class="chat-input-form">
+            {% csrf_token %}
+            <input type="text" id="userInput" class="chat-input-field" placeholder="Ask anything about our service, documentation, or policies..." autocomplete="off" required>
+            <button type="submit" class="chat-send-btn">
+                <span>Send</span>
+                <i class="bi bi-send-fill"></i>
+            </button>
+        </form>
     </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/chatbot.js' %}?v=2.0.0"></script>
+<script src="{% static 'js/chatbot.js' %}?v=4.0.0"></script>
 {% endblock %}

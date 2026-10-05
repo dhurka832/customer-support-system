@@ -1,30 +1,46 @@
 {% extends "base.html" %}
+{% block title %}Upload Document | SupportSphere{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-12 col-md-8 col-lg-6">
-        <div class="card card-modern p-4">
-            <h3 class="fw-bold mb-1">Upload PDF Document</h3>
-            <p class="text-muted small mb-4">Choose a PDF document to parse and index into the FAISS vector store database.</p>
+<div class="flex justify-center">
+    <div style="width: 100%; max-width: 620px;">
+        <div class="card-modern p-5 animate-slide-up">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="stat-icon-wrapper indigo" style="width: 50px; height: 50px; font-size: 1.4rem;">
+                    <i class="bi bi-cloud-arrow-up-fill"></i>
+                </div>
+                <div>
+                    <h2 class="mb-1">Upload PDF Document</h2>
+                    <p class="text-muted small m-0">Index PDF knowledge into the vector store database for chatbot reference.</p>
+                </div>
+            </div>
             
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 
-                <div class="mb-3">
-                    <label for="id_title" class="form-label small fw-semibold text-muted">Document Title</label>
-                    <input type="text" name="title" maxlength="200" required id="id_title" class="form-control form-control-modern" placeholder="e.g. Employee Handbook 2026">
+                <div class="form-group mb-3">
+                    <label for="id_title" class="form-label">
+                        <i class="bi bi-fonts me-1 text-primary"></i> Document Title
+                    </label>
+                    <input type="text" name="title" maxlength="200" required id="id_title" class="form-control" placeholder="e.g. Employee Handbook 2026 or Return Policy">
                 </div>
                 
-                <div class="mb-4">
-                    <label for="id_file" class="form-label small fw-semibold text-muted">PDF File</label>
-                    <input type="file" name="file" required id="id_file" class="form-control form-control-modern" accept="application/pdf">
+                <div class="form-group mb-4">
+                    <label for="id_file" class="form-label">
+                        <i class="bi bi-file-earmark-pdf me-1 text-danger"></i> PDF File Attachment
+                    </label>
+                    <input type="file" name="file" required id="id_file" class="form-control" accept="application/pdf" style="padding: 0.65rem 1rem;">
+                    <span class="text-muted fs-xs mt-1 d-block">
+                        <i class="bi bi-info-circle me-1"></i>Only .PDF format is parsed and split into vector embeddings.
+                    </span>
                 </div>
                 
-                <div class="d-flex justify-content-between align-items-center">
-                    <a href="{% url 'document-list' %}" class="btn btn-secondary-modern">
-                        <i class="bi bi-arrow-left"></i> Back
+                <div class="flex items-center justify-between pt-4 border-top" style="border-color: var(--border-subtle);">
+                    <a href="{% url 'document-list' %}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to Documents
                     </a>
-                    <button type="submit" class="btn btn-primary-modern px-4">
-                        <i class="bi bi-cloud-arrow-up-fill"></i> Upload & Index
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-cloud-arrow-up-fill"></i> Upload &amp; Vectorize
                     </button>
                 </div>
             </form>

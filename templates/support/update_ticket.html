@@ -1,39 +1,54 @@
 {% extends "base.html" %}
+{% block title %}Update Ticket | SupportSphere{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-12 col-md-8 col-lg-6">
-        <div class="card card-modern p-4">
-            <h3 class="fw-bold mb-1">Update Ticket</h3>
-            <p class="text-muted small mb-4">Edit the details of your support ticket below.</p>
+<div class="flex justify-center">
+    <div style="width: 100%; max-width: 680px;">
+        <div class="card-modern p-5 animate-slide-up">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="stat-icon-wrapper amber" style="width: 50px; height: 50px; font-size: 1.4rem;">
+                    <i class="bi bi-pencil-square"></i>
+                </div>
+                <div>
+                    <h2 class="mb-1">Update Ticket Details</h2>
+                    <p class="text-muted small m-0">Modify the subject, priority level, or explanation for this ticket.</p>
+                </div>
+            </div>
             
             <form method="post">
                 {% csrf_token %}
                 
-                <div class="mb-3">
-                    <label for="id_title" class="form-label small fw-semibold text-muted">Ticket Subject</label>
-                    <input type="text" name="title" value="{{ form.title.value|default:'' }}" maxlength="200" required id="id_title" class="form-control form-control-modern">
+                <div class="form-group mb-3">
+                    <label for="id_title" class="form-label">
+                        <i class="bi bi-chat-left-quote me-1 text-primary"></i> Ticket Subject
+                    </label>
+                    <input type="text" name="title" value="{{ form.title.value|default:'' }}" maxlength="200" required id="id_title" class="form-control">
                 </div>
 
-                <div class="mb-3">
-                    <label for="id_priority" class="form-label small fw-semibold text-muted">Priority</label>
-                    <select name="priority" id="id_priority" class="form-select form-control-modern" required>
-                        <option value="Low" {% if form.priority.value == 'Low' %}selected{% endif %}>Low</option>
-                        <option value="Medium" {% if form.priority.value == 'Medium' %}selected{% endif %}>Medium</option>
-                        <option value="High" {% if form.priority.value == 'High' %}selected{% endif %}>High</option>
+                <div class="form-group mb-3">
+                    <label for="id_priority" class="form-label">
+                        <i class="bi bi-flag me-1 text-primary"></i> Priority Level
+                    </label>
+                    <select name="priority" id="id_priority" class="form-select" required>
+                        <option value="Low" {% if form.priority.value == 'Low' %}selected{% endif %}>Low - General Question</option>
+                        <option value="Medium" {% if form.priority.value == 'Medium' %}selected{% endif %}>Medium - Standard Inquiry</option>
+                        <option value="High" {% if form.priority.value == 'High' %}selected{% endif %}>High - Urgent / Critical Problem</option>
                     </select>
                 </div>
 
-                <div class="mb-4">
-                    <label for="id_description" class="form-label small fw-semibold text-muted">Detailed Description</label>
-                    <textarea name="description" id="id_description" rows="5" required class="form-control form-control-modern">{{ form.description.value|default:'' }}</textarea>
+                <div class="form-group mb-4">
+                    <label for="id_description" class="form-label">
+                        <i class="bi bi-text-paragraph me-1 text-primary"></i> Detailed Description
+                    </label>
+                    <textarea name="description" id="id_description" rows="6" required class="form-control">{{ form.description.value|default:'' }}</textarea>
                 </div>
                 
-                <div class="d-flex justify-content-between align-items-center">
-                    <a href="{% url 'ticket-list' %}" class="btn btn-secondary-modern">
-                        Cancel
+                <div class="flex items-center justify-between pt-4 border-top" style="border-color: var(--border-subtle);">
+                    <a href="{% url 'ticket-list' %}" class="btn btn-secondary">
+                        <i class="bi bi-x-circle"></i> Cancel
                     </a>
-                    <button type="submit" class="btn btn-primary-modern px-4">
-                        <i class="bi bi-save"></i> Save Changes
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check2-circle"></i> Save Changes
                     </button>
                 </div>
             </form>
